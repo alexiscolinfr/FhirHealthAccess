@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp"
+    tools:context=".DetailsActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textViewStatus"
+            android:layout_width="170dp"
+            android:layout_height="match_parent"
+            android:textSize="18sp"
+            android:text="@string/status" />
+
+        <ImageView
+            android:id="@+id/imageViewStatus"
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
+            android:padding="2dp"
+            android:src="@drawable/status_unknow" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textViewNom"
+            android:layout_width="170dp"
+            android:layout_height="match_parent"
+            android:textSize="18sp"
+            android:text="@string/last_name" />
+
+        <TextView
+            android:id="@+id/textViewNomPatient"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textViewPrenom"
+            android:layout_width="170dp"
+            android:layout_height="match_parent"
+            android:textSize="18sp"
+            android:text="@string/first_name" />
+
+        <TextView
+            android:id="@+id/textViewPrenomPatient"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textViewSexe"
+            android:layout_width="170dp"
+            android:layout_height="match_parent"
+            android:textSize="18sp"
+            android:text="@string/sex" />
+
+        <TextView
+            android:id="@+id/textViewSexePatient"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textViewDateNaissance"
+            android:layout_width="170dp"
+            android:layout_height="match_parent"
+            android:textSize="18sp"
+            android:text="@string/birthdate" />
+
+        <TextView
+            android:id="@+id/textViewDateNaissancePatient"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textViewTelephone"
+            android:layout_width="170dp"
+            android:layout_height="match_parent"
+            android:textSize="18sp"
+            android:text="@string/phone" />
+
+        <TextView
+            android:id="@+id/textViewTelephonePatient"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textViewAdresse"
+            android:layout_width="170dp"
+            android:layout_height="match_parent"
+            android:textSize="18sp"
+            android:text="@string/addresse" />
+
+        <TextView
+            android:id="@+id/textViewAdressePatient"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textViewEtatCivil"
+            android:layout_width="170dp"
+            android:layout_height="match_parent"
+            android:textSize="18sp"
+            android:text="@string/marital_status" />
+
+        <TextView
+            android:id="@+id/textViewEtatCivilPatient"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textViewLangue"
+            android:layout_width="170dp"
+            android:layout_height="match_parent"
+            android:textSize="18sp"
+            android:text="@string/language" />
+
+        <TextView
+            android:id="@+id/textViewLanguePatient"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+</LinearLayout>

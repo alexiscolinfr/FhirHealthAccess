@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">FhirHealthAccess</string>
+    <string name="connection">Connexion</string>
+    <string name="email_address">Adresse e-mail</string>
+    <string name="password">Mot de passe</string>
+    <string name="status">Statut :</string>
+    <string name="last_name">Nom :</string>
+    <string name="first_name">Prénom :</string>
+    <string name="sex">Sexe :</string>
+    <string name="birthdate">Date de naissance :</string>
+    <string name="phone">Téléphone :</string>
+    <string name="addresse">Adresse :</string>
+    <string name="marital_status">État civil :</string>
+    <string name="language">Langue :</string>
 </resources>
