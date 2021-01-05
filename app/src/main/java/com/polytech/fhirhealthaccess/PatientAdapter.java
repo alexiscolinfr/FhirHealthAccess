@@ -5,11 +5,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
+import com.polytech.fhirhealthaccess.database.Patient;
+
+import java.util.ArrayList;
 import java.util.List;
 
-public class PatientAdapter extends ArrayAdapter<Patient> {
+public class PatientAdapter extends ArrayAdapter<Patient> implements Filterable {
 
     public List<Patient> patients;
 
@@ -61,5 +68,47 @@ public class PatientAdapter extends ArrayAdapter<Patient> {
         public TextView detailPrenom;
         public TextView detailDateNaissance;
         public TextView detailSexe;
+    }
+
+    @NonNull
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                final FilterResults oReturn = new FilterResults();
+                final List<Patient> results = new ArrayList<>();
+                List<Patient> allPatients = Patient.listAll(Patient.class);
+                if (constraint != null && allPatients!=null) {
+                    if (allPatients.size() > 0) {
+                        for (final Patient p : allPatients) {
+                            if (p.getNom().toLowerCase().contains(constraint.toString().toLowerCase()) || p.getPrenom().toLowerCase().contains(constraint.toString().toLowerCase()))
+                                results.add(p);
+                        }
+                    }
+                    oReturn.values = results;
+                    oReturn.count = results.size();
+                }
+                return oReturn;
+            }
+
+            @SuppressWarnings("unchecked")
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                patients = (List<Patient>) results.values;
+                if (results.count > 0) {
+                    notifyDataSetChanged();
+                    clear();
+                    for (Patient p : patients)
+                        add(p);
+                } else {
+                    notifyDataSetInvalidated();
+                }
+            }
+        };
+    }
+
+    public void notifyDataSetChanged() {
+        super.notifyDataSetChanged();
     }
 }

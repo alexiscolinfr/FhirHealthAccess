@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.polytech.fhirhealthaccess.database.Patient;
+
 public class DetailsActivity extends AppCompatActivity {
 
     private Patient patient = ListPatientActivity.selectedPatient;

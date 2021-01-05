@@ -1,16 +1,15 @@
-package com.polytech.fhirhealthaccess;
+package com.polytech.fhirhealthaccess.database;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import com.orm.SugarRecord;
 
-public class Patient {
+public class Patient extends SugarRecord {
 
-    private String nom,prenom,sexe,telephone,adresse,etatCivil,langue;
-    private Date dateNaissance;
-    private boolean actif;
+    String nom,prenom,sexe,dateNaissance,telephone,adresse,etatCivil,langue;
+    boolean actif;
 
-    public Patient(boolean actif, String nom, String prenom, String sexe, Date dateNaissance, String telephone, String adresse, String etatCivil, String langue){
+    public Patient(){}
+
+    public Patient(boolean actif, String nom, String prenom, String sexe, String dateNaissance, String telephone, String adresse, String etatCivil, String langue){
         this.actif = actif;
         this.nom = nom;
         this.prenom = prenom;
@@ -39,10 +38,7 @@ public class Patient {
     }
 
     public String getDateNaissance() {
-        String pattern = "MM/dd/yyyy";
-        DateFormat df = new SimpleDateFormat(pattern);
-        String todayAsString = df.format(dateNaissance);
-        return todayAsString;
+        return dateNaissance;
     }
 
     public String getTelephone() {

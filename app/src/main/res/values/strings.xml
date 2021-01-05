@@ -12,4 +12,11 @@
     <string name="addresse">Adresse :</string>
     <string name="marital_status">État civil :</string>
     <string name="language">Langue :</string>
+    <string name="inactive">Inactif</string>
+    <string name="active">Actif</string>
+    <string name="male">homme</string>
+    <string name="female">femme</string>
+    <string name="other">autre</string>
+    <string name="default_date">01/01/1970</string>
+    <string name="add">Ajouter</string>
 </resources>
