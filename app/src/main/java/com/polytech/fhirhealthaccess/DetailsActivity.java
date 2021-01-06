@@ -12,9 +12,11 @@ import android.widget.TextView;
 
 import com.polytech.fhirhealthaccess.database.Patient;
 
+import java.util.List;
+
 public class DetailsActivity extends AppCompatActivity {
 
-    private Patient patient = ListPatientActivity.selectedPatient;
+    private Patient patient;
     private TextView textViewNom, textViewPrenom, textViewSexe, textViewDateNaissance, textViewTelephone, textViewAdresse, textViewEtatCivil, textViewLangue;
     private ImageView imageViewStatus;
 
@@ -22,6 +24,8 @@ public class DetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
+
+        patient = ListPatientActivity.selectedPatient;
 
         textViewNom = findViewById(R.id.textViewNomPatient);
         textViewPrenom = findViewById(R.id.textViewPrenomPatient);
@@ -59,12 +63,18 @@ public class DetailsActivity extends AppCompatActivity {
                 startActivity(intent);
                 return true;
             case R.id.delete:
-                patient.delete();
+                deletePatient();
                 finish();
                 return true;
             default:
                 return super.onContextItemSelected(item);
         }
+    }
+
+    public void deletePatient(){
+
+        // TODO : Supprimer le patient du serveur Fhir ici
+
     }
 
     public static int getImageId(Context c, boolean isActif) {

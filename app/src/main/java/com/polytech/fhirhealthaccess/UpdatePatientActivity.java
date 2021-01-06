@@ -102,24 +102,18 @@ public class UpdatePatientActivity extends AppCompatActivity {
         String etatCivil = editTextEtatCivil.getText().toString().trim();
         String langue = editTextLangue.getText().toString().trim();
 
-        if(isNewPatient){
-            Patient patient = new Patient(actif,nom,prenom,sexe,dateNaissance,telephone,adresse,etatCivil,langue);
+        Patient patient = new Patient(actif,nom,prenom,sexe,dateNaissance,telephone,adresse,etatCivil,langue);
 
-            patient.save();
+        if(isNewPatient){
+
+            // TODO : Ajouter le nouveau patient sur le serveur Fhir ici
+
             finish();
         }
         else{
-            patient.setActif(actif);
-            patient.setNom(nom);
-            patient.setPrenom(prenom);
-            patient.setSexe(sexe);
-            patient.setDateNaissance(dateNaissance);
-            patient.setTelephone(telephone);
-            patient.setAdresse(adresse);
-            patient.setEtatCivil(etatCivil);
-            patient.setLangue(langue);
 
-            patient.save();
+            // TODO : Mettre à jour le patient sur le serveur Fhir ici
+
             Intent intent = new Intent(this, ListPatientActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);

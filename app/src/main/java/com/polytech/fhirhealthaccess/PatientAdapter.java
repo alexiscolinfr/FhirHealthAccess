@@ -18,11 +18,12 @@ import java.util.List;
 
 public class PatientAdapter extends ArrayAdapter<Patient> implements Filterable {
 
-    public List<Patient> patients;
+    public List<Patient> allPatients,filteredPatients;
 
     public PatientAdapter(Context context, List<Patient> patients){
         super(context,0,patients);
-        this.patients = patients;
+        this.filteredPatients = patients;
+        this.allPatients = new ArrayList<>(patients);
     }
 
     @Override
@@ -60,7 +61,7 @@ public class PatientAdapter extends ArrayAdapter<Patient> implements Filterable 
 
     @Override
     public int getCount() {
-        return patients.size();
+        return filteredPatients.size();
     }
 
     private static class DetailViewHolder{
@@ -76,13 +77,14 @@ public class PatientAdapter extends ArrayAdapter<Patient> implements Filterable 
         return new Filter() {
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
+                final  String filterString = constraint.toString().toLowerCase();
                 final FilterResults oReturn = new FilterResults();
                 final List<Patient> results = new ArrayList<>();
-                List<Patient> allPatients = Patient.listAll(Patient.class);
-                if (constraint != null && allPatients!=null) {
-                    if (allPatients.size() > 0) {
-                        for (final Patient p : allPatients) {
-                            if (p.getNom().toLowerCase().contains(constraint.toString().toLowerCase()) || p.getPrenom().toLowerCase().contains(constraint.toString().toLowerCase()))
+                List<Patient> list = allPatients;
+                if (filterString.length() != 0 && list!=null) {
+                    if (list.size() > 0) {
+                        for (final Patient p : list) {
+                            if (p.getNom().toLowerCase().contains(filterString) || p.getPrenom().toLowerCase().contains(filterString))
                                 results.add(p);
                         }
                     }
@@ -95,11 +97,11 @@ public class PatientAdapter extends ArrayAdapter<Patient> implements Filterable 
             @SuppressWarnings("unchecked")
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
-                patients = (List<Patient>) results.values;
+                filteredPatients = (List<Patient>) results.values;
                 if (results.count > 0) {
                     notifyDataSetChanged();
                     clear();
-                    for (Patient p : patients)
+                    for (Patient p : filteredPatients)
                         add(p);
                 } else {
                     notifyDataSetInvalidated();

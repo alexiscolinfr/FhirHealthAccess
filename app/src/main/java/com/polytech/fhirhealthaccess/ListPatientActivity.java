@@ -17,6 +17,8 @@ import android.widget.SearchView;
 
 import com.polytech.fhirhealthaccess.database.Patient;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ListPatientActivity extends AppCompatActivity {
@@ -25,23 +27,18 @@ public class ListPatientActivity extends AppCompatActivity {
     private SearchView searchView;
     private PatientAdapter adapter;
     public static Patient selectedPatient;
-    private List<Patient> patients;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_patient);
 
-        // TODO : Récupérer ici tous les patients depuis le serveur Fhir
-
-        patients = Patient.listAll(Patient.class);
-
         listView = findViewById(R.id.listViewPatient);
         searchView = findViewById(R.id.searchBar);
-        adapter = new PatientAdapter(ListPatientActivity.this, patients);
-        listView.setAdapter(adapter);
         listView.setTextFilterEnabled(true);
         searchView.setIconifiedByDefault(false);
+
+        getPatientsList();
 
         // Rend les éléments de la liste cliquable
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
@@ -113,11 +110,18 @@ public class ListPatientActivity extends AppCompatActivity {
         dialog.show();
     }
 
+    public void getPatientsList(){
+        List<Patient> listPatients = new ArrayList<>();
+
+        // TODO : Récupérer ici tous les patients depuis le serveur Fhir
+
+        adapter = new PatientAdapter(ListPatientActivity.this, listPatients);
+        listView.setAdapter(adapter);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
-        patients = Patient.listAll(Patient.class);
-        adapter = new PatientAdapter(ListPatientActivity.this, patients);
-        listView.setAdapter(adapter);
+        getPatientsList();
     }
 }

@@ -1,13 +1,9 @@
 package com.polytech.fhirhealthaccess.database;
 
-import com.orm.SugarRecord;
-
-public class Patient extends SugarRecord {
+public class Patient {
 
     private String nom,prenom,sexe,dateNaissance,telephone,adresse,etatCivil,langue;
     private boolean actif;
-
-    public Patient(){}
 
     public Patient(boolean actif, String nom, String prenom, String sexe, String dateNaissance, String telephone, String adresse, String etatCivil, String langue){
         this.actif = actif;
