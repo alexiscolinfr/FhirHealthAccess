@@ -4,8 +4,8 @@ import com.orm.SugarRecord;
 
 public class Patient extends SugarRecord {
 
-    String nom,prenom,sexe,dateNaissance,telephone,adresse,etatCivil,langue;
-    boolean actif;
+    private String nom,prenom,sexe,dateNaissance,telephone,adresse,etatCivil,langue;
+    private boolean actif;
 
     public Patient(){}
 
@@ -55,5 +55,41 @@ public class Patient extends SugarRecord {
 
     public String getLangue() {
         return langue;
+    }
+
+    public void setActif(boolean actif) {
+        this.actif = actif;
+    }
+
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
+
+    public void setPrenom(String prenom) {
+        this.prenom = prenom;
+    }
+
+    public void setSexe(String sexe) {
+        this.sexe = sexe;
+    }
+
+    public void setDateNaissance(String dateNaissance) {
+        this.dateNaissance = dateNaissance;
+    }
+
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
+    }
+
+    public void setAdresse(String adresse) {
+        this.adresse = adresse;
+    }
+
+    public void setEtatCivil(String etatCivil) {
+        this.etatCivil = etatCivil;
+    }
+
+    public void setLangue(String langue) {
+        this.langue = langue;
     }
 }

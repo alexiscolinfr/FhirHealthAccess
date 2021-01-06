@@ -37,7 +37,7 @@ public class LoginActivity extends AppCompatActivity {
         u1.save();
 
         if (email.isEmpty() || password.isEmpty()){
-            Toast.makeText(this, "Vous devez renseigner un login/mot de passe",Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Vous devez renseigner votre adresse email et mot de passe",Toast.LENGTH_LONG).show();
         }
         else{
             List<User> users = User.listAll(User.class);
@@ -46,6 +46,9 @@ public class LoginActivity extends AppCompatActivity {
                     Intent intent = new Intent(LoginActivity.this, ListPatientActivity.class);
                     startActivity(intent);
                     break;
+                }
+                else{
+                    Toast.makeText(this, "Adresse email et/ou mot de passe incorrect",Toast.LENGTH_LONG).show();
                 }
             }
         }

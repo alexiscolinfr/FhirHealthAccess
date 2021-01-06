@@ -78,7 +78,7 @@
             android:layout_width="170dp"
             android:layout_height="match_parent"
             android:textSize="18sp"
-            android:text="@string/sex" />
+            android:text="@string/gender" />
 
         <TextView
             android:id="@+id/textViewSexePatient"

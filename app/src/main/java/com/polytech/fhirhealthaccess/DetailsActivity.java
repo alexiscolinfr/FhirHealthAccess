@@ -3,7 +3,10 @@ package com.polytech.fhirhealthaccess;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -39,6 +42,29 @@ public class DetailsActivity extends AppCompatActivity {
         textViewEtatCivil.setText(patient.getEtatCivil());
         textViewLangue.setText(patient.getLangue());
         imageViewStatus.setImageResource(getImageId(this,patient.isActif()));
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_details, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.edit:
+                Intent intent = new Intent(this, UpdatePatientActivity.class);
+                intent.putExtra("isNewPatient",false);
+                startActivity(intent);
+                return true;
+            case R.id.delete:
+                patient.delete();
+                finish();
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
     }
 
     public static int getImageId(Context c, boolean isActif) {

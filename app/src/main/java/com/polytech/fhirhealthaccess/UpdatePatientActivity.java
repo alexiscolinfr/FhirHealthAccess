@@ -3,6 +3,7 @@ package com.polytech.fhirhealthaccess;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -15,20 +16,26 @@ import com.polytech.fhirhealthaccess.database.Patient;
 
 import java.util.Calendar;
 
-public class AddPatientActivity extends AppCompatActivity {
+public class UpdatePatientActivity extends AppCompatActivity {
 
     private int lastSelectedYear, lastSelectedMonth, lastSelectedDayOfMonth;
-    Button buttonDateNaissance;
-    ToggleButton toggleButtonStatut;
-    EditText editTextNom, editTextPrenom,editTextTelephone,editTextAdresse,editTextEtatCivil,editTextLangue;
-    RadioGroup radioGroupSexe;
+    private Button buttonDateNaissance, buttonUpdatePatient;
+    private ToggleButton toggleButtonStatut;
+    private EditText editTextNom, editTextPrenom,editTextTelephone,editTextAdresse,editTextEtatCivil,editTextLangue;
+    private RadioGroup radioGroupSexe;
+    private boolean isNewPatient;
+    private Patient patient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_patient);
+        setContentView(R.layout.activity_update_patient);
+
+        final Intent intent = getIntent();
+        isNewPatient = intent.getBooleanExtra("isNewPatient",true);
 
         buttonDateNaissance = findViewById(R.id.buttonDateNaissance);
+        buttonUpdatePatient = findViewById(R.id.buttonUpdatePatient);
         toggleButtonStatut = findViewById(R.id.toggleButtonStatut);
         radioGroupSexe = findViewById(R.id.radioGroupeSexe);
         editTextNom = findViewById(R.id.editTextNom);
@@ -37,6 +44,23 @@ public class AddPatientActivity extends AppCompatActivity {
         editTextAdresse = findViewById(R.id.editTextAdresse);
         editTextEtatCivil = findViewById(R.id.editTextEtatCivil);
         editTextLangue = findViewById(R.id.editTextLangue);
+
+        if (isNewPatient){
+            buttonUpdatePatient.setText(getString(R.string.add));
+        }
+        else{
+            buttonUpdatePatient.setText(getString(R.string.edit));
+            patient = ListPatientActivity.selectedPatient;
+            toggleButtonStatut.setChecked(patient.isActif());
+            editTextNom.setText(patient.getNom());
+            editTextPrenom.setText(patient.getPrenom());
+            setPatientGender(patient.getSexe());
+            buttonDateNaissance.setText(patient.getDateNaissance());
+            editTextTelephone.setText(patient.getTelephone());
+            editTextAdresse.setText(patient.getAdresse());
+            editTextEtatCivil.setText(patient.getEtatCivil());
+            editTextLangue.setText(patient.getLangue());
+        }
     }
 
     public void setBirthdate (View view){
@@ -67,7 +91,7 @@ public class AddPatientActivity extends AppCompatActivity {
         datePickerDialog.show();
     }
 
-    public void addPatient (View view){
+    public void updatePatient (View view){
         boolean actif = toggleButtonStatut.isChecked();
         String nom = editTextNom.getText().toString().trim();
         String prenom = editTextPrenom.getText().toString().trim();
@@ -77,10 +101,29 @@ public class AddPatientActivity extends AppCompatActivity {
         String adresse = editTextAdresse.getText().toString().trim();
         String etatCivil = editTextEtatCivil.getText().toString().trim();
         String langue = editTextLangue.getText().toString().trim();
-        Patient patient = new Patient(actif,nom,prenom,sexe,dateNaissance,telephone,adresse,etatCivil,langue);
-        patient.save();
 
-        finish();
+        if(isNewPatient){
+            Patient patient = new Patient(actif,nom,prenom,sexe,dateNaissance,telephone,adresse,etatCivil,langue);
+
+            patient.save();
+            finish();
+        }
+        else{
+            patient.setActif(actif);
+            patient.setNom(nom);
+            patient.setPrenom(prenom);
+            patient.setSexe(sexe);
+            patient.setDateNaissance(dateNaissance);
+            patient.setTelephone(telephone);
+            patient.setAdresse(adresse);
+            patient.setEtatCivil(etatCivil);
+            patient.setLangue(langue);
+
+            patient.save();
+            Intent intent = new Intent(this, ListPatientActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+        }
     }
 
     public String getPatientGender(RadioGroup radioGroup){
@@ -98,5 +141,19 @@ public class AddPatientActivity extends AppCompatActivity {
                 break;
         }
         return sexe;
+    }
+
+    public void setPatientGender(String gender){
+        switch (gender) {
+            case "Homme":
+                radioGroupSexe.check(R.id.radioButtonH);
+                break;
+            case "Femme":
+                radioGroupSexe.check(R.id.radioButtonF);
+                break;
+            default:
+                radioGroupSexe.check(R.id.radioButtonA);
+                break;
+        }
     }
 }

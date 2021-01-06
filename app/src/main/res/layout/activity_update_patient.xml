@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AddPatientActivity">
+    tools:context=".UpdatePatientActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -56,7 +56,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:maxLength="20"
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName|textCapWords" />
         </LinearLayout>
 
         <LinearLayout
@@ -77,7 +77,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:maxLength="20"
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName|textCapWords" />
         </LinearLayout>
 
         <LinearLayout
@@ -92,7 +92,7 @@
                 android:layout_gravity="center"
                 android:textSize="18sp"
                 android:layout_marginEnd="10dp"
-                android:text="@string/sex" />
+                android:text="@string/gender" />
 
             <RadioGroup
                 android:id="@+id/radioGroupeSexe"
@@ -232,11 +232,10 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/buttonAddPatient"
+            android:id="@+id/buttonUpdatePatient"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:onClick="addPatient"
-            android:text="@string/add" />
+            android:onClick="updatePatient" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

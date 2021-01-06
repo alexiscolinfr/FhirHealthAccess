@@ -17,10 +17,6 @@ import android.widget.SearchView;
 
 import com.polytech.fhirhealthaccess.database.Patient;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 public class ListPatientActivity extends AppCompatActivity {
@@ -73,7 +69,7 @@ public class ListPatientActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu, menu);
+        getMenuInflater().inflate(R.menu.menu_list_patient, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -81,7 +77,8 @@ public class ListPatientActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.add:
-                Intent intent1 = new Intent(this, AddPatientActivity.class);
+                Intent intent1 = new Intent(this, UpdatePatientActivity.class);
+                intent1.putExtra("isNewPatient",true);
                 startActivity(intent1);
                 return true;
             case R.id.disconnect:
