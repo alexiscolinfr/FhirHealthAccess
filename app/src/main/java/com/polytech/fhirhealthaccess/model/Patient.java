@@ -1,11 +1,57 @@
-package com.polytech.fhirhealthaccess.database;
+package com.polytech.fhirhealthaccess.model;
+
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class Patient {
 
-    private String nom,prenom,sexe,dateNaissance,telephone,adresse,etatCivil,langue;
+    @SerializedName("id")
+    @Expose
+    private String id;
+
+    @SerializedName("active")
+    @Expose
     private boolean actif;
 
-    public Patient(boolean actif, String nom, String prenom, String sexe, String dateNaissance, String telephone, String adresse, String etatCivil, String langue){
+    @SerializedName("family")
+    @Expose
+    private String nom;
+
+    @SerializedName("given")
+    @Expose
+    private String prenom;
+
+    @SerializedName("gender")
+    @Expose
+    private String sexe;
+
+    @SerializedName("birthDate")
+    @Expose
+    private Date dateNaissance;
+
+    @SerializedName("telecom")
+    @Expose
+    private String telephone;
+
+    @SerializedName("address")
+    @Expose
+    private String adresse;
+
+    @SerializedName("maritalStatus")
+    @Expose
+    private String etatCivil;
+
+    @SerializedName("language")
+    @Expose
+    private String langue;
+
+    public Patient(String id, boolean actif, String nom, String prenom, String sexe, Date dateNaissance, String telephone, String adresse, String etatCivil, String langue){
+        this.id = id;
         this.actif = actif;
         this.nom = nom;
         this.prenom = prenom;
@@ -15,6 +61,10 @@ public class Patient {
         this.adresse = adresse;
         this.etatCivil = etatCivil;
         this.langue = langue;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public boolean isActif() {
@@ -34,7 +84,8 @@ public class Patient {
     }
 
     public String getDateNaissance() {
-        return dateNaissance;
+        String pattern = "MM/dd/yyyy";
+        return new SimpleDateFormat(pattern).format(dateNaissance);
     }
 
     public String getTelephone() {
@@ -53,6 +104,10 @@ public class Patient {
         return langue;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public void setActif(boolean actif) {
         this.actif = actif;
     }
@@ -69,8 +124,8 @@ public class Patient {
         this.sexe = sexe;
     }
 
-    public void setDateNaissance(String dateNaissance) {
-        this.dateNaissance = dateNaissance;
+    public void setDateNaissance(String dateNaissance) throws ParseException {
+        this.dateNaissance = new SimpleDateFormat("dd/MM/yyyy", Locale.FRENCH).parse(dateNaissance);
     }
 
     public void setTelephone(String telephone) {

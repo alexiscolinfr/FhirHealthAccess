@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,11 +16,20 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
 
-import com.polytech.fhirhealthaccess.database.Patient;
+import com.polytech.fhirhealthaccess.model.Patient;
+import com.polytech.fhirhealthaccess.remote.APIUtils;
+import com.polytech.fhirhealthaccess.remote.PatientService;
 
-import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ListPatientActivity extends AppCompatActivity {
 
@@ -27,6 +37,8 @@ public class ListPatientActivity extends AppCompatActivity {
     private SearchView searchView;
     private PatientAdapter adapter;
     public static Patient selectedPatient;
+    private PatientService patientService;
+    private List<Patient> list = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +49,7 @@ public class ListPatientActivity extends AppCompatActivity {
         searchView = findViewById(R.id.searchBar);
         listView.setTextFilterEnabled(true);
         searchView.setIconifiedByDefault(false);
+        patientService = APIUtils.getPatientService();
 
         getPatientsList();
 
@@ -110,12 +123,23 @@ public class ListPatientActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    public void getPatientsList(){
-        List<Patient> listPatients = new ArrayList<>();
+    public void getPatientsList() {
+        Call<List<Patient>> call = patientService.getPatients();
+        call.enqueue(new Callback<List<Patient>>() {
+            @Override
+            public void onResponse(Call<List<Patient>> call, Response<List<Patient>> response) {
+                if(response.isSuccessful()){
+                    list = response.body();
+                }
+            }
 
-        // TODO : Récupérer ici tous les patients depuis le serveur Fhir
+            @Override
+            public void onFailure(Call<List<Patient>> call, Throwable t) {
+                Log.e("ERROR: ", t.getMessage());
+            }
+        });
 
-        adapter = new PatientAdapter(ListPatientActivity.this, listPatients);
+        adapter = new PatientAdapter(ListPatientActivity.this, list);
         listView.setAdapter(adapter);
     }
 

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">FhirHealthAccess</string>
+    <string name="app_name">Fhir Health Access</string>
     <string name="connection">Connexion</string>
     <string name="email_address">Adresse e-mail</string>
     <string name="password">Mot de passe</string>

@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import com.polytech.fhirhealthaccess.database.Patient;
+import com.polytech.fhirhealthaccess.model.Patient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -90,6 +90,10 @@ public class PatientAdapter extends ArrayAdapter<Patient> implements Filterable 
                     }
                     oReturn.values = results;
                     oReturn.count = results.size();
+                }
+                else {
+                    oReturn.values = allPatients;
+                    oReturn.count = allPatients.size();
                 }
                 return oReturn;
             }
