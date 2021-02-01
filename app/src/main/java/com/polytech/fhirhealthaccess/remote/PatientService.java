@@ -1,8 +1,8 @@
 package com.polytech.fhirhealthaccess.remote;
 
+import com.polytech.fhirhealthaccess.model.ListPatient;
 import com.polytech.fhirhealthaccess.model.Patient;
-
-import java.util.List;
+import com.polytech.fhirhealthaccess.model.Resource;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -17,15 +17,15 @@ public interface PatientService {
 
     @GET("Patient/")
     @Headers({"Accept: application/fhir+json","Content-Type: application/fhir+json"})
-    Call<List<Patient>> getPatients();
+    Call<ListPatient> getPatients();
 
     @POST("Patient/")
     @Headers({"Accept: application/fhir+json","Content-Type: application/fhir+json"})
-    Call<Patient> addPatient(@Body Patient patient);
+    Call<Patient> addPatient(@Body Resource ressourcePatient);
 
     @PUT("Patient/{id}")
     @Headers({"Accept: application/fhir+json","Content-Type: application/fhir+json"})
-    Call<Patient> updatePatient(@Path("id") String id, @Body Patient patient);
+    Call<Patient> updatePatient(@Path("id") String id, @Body Resource ressourcePatient);
 
     @DELETE("Patient/{id}")
     @Headers({"Accept: application/fhir+json","Content-Type: application/fhir+json"})

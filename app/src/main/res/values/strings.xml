@@ -9,7 +9,7 @@
     <string name="gender">Sexe :</string>
     <string name="birthdate">Date de naissance :</string>
     <string name="phone">Téléphone :</string>
-    <string name="addresse">Adresse :</string>
+    <string name="city">Ville :</string>
     <string name="marital_status">État civil :</string>
     <string name="language">Langue :</string>
     <string name="inactive">Inactif</string>

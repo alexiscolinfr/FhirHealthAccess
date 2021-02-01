@@ -15,15 +15,12 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.polytech.fhirhealthaccess.model.Patient;
+import com.polytech.fhirhealthaccess.model.Resource;
 import com.polytech.fhirhealthaccess.remote.APIUtils;
 import com.polytech.fhirhealthaccess.remote.PatientService;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-import java.util.UUID;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,7 +31,7 @@ public class UpdatePatientActivity extends AppCompatActivity {
     private int lastSelectedYear, lastSelectedMonth, lastSelectedDayOfMonth;
     private Button buttonDateNaissance, buttonUpdatePatient;
     private ToggleButton toggleButtonStatut;
-    private EditText editTextNom, editTextPrenom,editTextTelephone,editTextAdresse,editTextEtatCivil,editTextLangue;
+    private EditText editTextNom, editTextPrenom,editTextTelephone,editTextCity,editTextEtatCivil,editTextLangue;
     private RadioGroup radioGroupSexe;
     private boolean isNewPatient;
     private Patient selectedPatient = ListPatientActivity.selectedPatient;
@@ -57,7 +54,7 @@ public class UpdatePatientActivity extends AppCompatActivity {
         editTextNom = findViewById(R.id.editTextNom);
         editTextPrenom = findViewById(R.id.editTextPrenom);
         editTextTelephone = findViewById(R.id.editTextTelephone);
-        editTextAdresse = findViewById(R.id.editTextAdresse);
+        editTextCity = findViewById(R.id.editTextCity);
         editTextEtatCivil = findViewById(R.id.editTextEtatCivil);
         editTextLangue = findViewById(R.id.editTextLangue);
 
@@ -66,15 +63,15 @@ public class UpdatePatientActivity extends AppCompatActivity {
         }
         else{
             buttonUpdatePatient.setText(getString(R.string.edit));
-            toggleButtonStatut.setChecked(selectedPatient.isActif());
-            editTextNom.setText(selectedPatient.getNom());
-            editTextPrenom.setText(selectedPatient.getPrenom());
-            setPatientGender(selectedPatient.getSexe());
-            buttonDateNaissance.setText(selectedPatient.getDateNaissance());
-            editTextTelephone.setText(selectedPatient.getTelephone());
-            editTextAdresse.setText(selectedPatient.getAdresse());
-            editTextEtatCivil.setText(selectedPatient.getEtatCivil());
-            editTextLangue.setText(selectedPatient.getLangue());
+            toggleButtonStatut.setChecked(selectedPatient.getResource().getActive());
+            editTextNom.setText(selectedPatient.getResource().getName().get(0).getFamily());
+            editTextPrenom.setText(selectedPatient.getResource().getName().get(0).getGiven()[0]);
+            setPatientGender(selectedPatient.getResource().getGender());
+            buttonDateNaissance.setText(selectedPatient.getResource().getBirthDate());
+            editTextTelephone.setText(selectedPatient.getResource().getTelecom().get(0).getValue());
+            editTextCity.setText(selectedPatient.getResource().getAddress().get(0).getCity());
+            editTextEtatCivil.setText(selectedPatient.getResource().getMaritalStatus().getText());
+            editTextLangue.setText(selectedPatient.getResource().getCommunication().get(0).getLanguage().getText());
         }
     }
 
@@ -111,17 +108,17 @@ public class UpdatePatientActivity extends AppCompatActivity {
         String nom = editTextNom.getText().toString().trim();
         String prenom = editTextPrenom.getText().toString().trim();
         String sexe = getPatientGender(radioGroupSexe).trim();
-        Date dateNaissance = new SimpleDateFormat("dd/MM/yyyy", Locale.FRENCH).parse(buttonDateNaissance.getText().toString().trim());
+        String dateNaissance = buttonDateNaissance.getText().toString().trim();
         String telephone = editTextTelephone.getText().toString().trim();
-        String adresse = editTextAdresse.getText().toString().trim();
+        String ville = editTextCity.getText().toString().trim();
         String etatCivil = editTextEtatCivil.getText().toString().trim();
         String langue = editTextLangue.getText().toString().trim();
 
-        if(isNewPatient){
+        if(isNewPatient){/*
             String uniqueID = UUID.randomUUID().toString();
-            Patient patient = new Patient(uniqueID,actif,nom,prenom,sexe,dateNaissance,telephone,adresse,etatCivil,langue);
+            Patient newPatient = new Patient();
 
-            Call<Patient> call = patientService.addPatient(patient);
+            Call<Patient> call = patientService.addPatient(newPatient);
             call.enqueue(new Callback<Patient>() {
                 @Override
                 public void onResponse(Call<Patient> call, Response<Patient> response) {
@@ -136,17 +133,26 @@ public class UpdatePatientActivity extends AppCompatActivity {
                 }
             });
 
-            finish();
+            finish();*/
         }
         else{
-            Patient patient = new Patient(selectedPatient.getId(),actif,nom,prenom,sexe,dateNaissance,telephone,adresse,etatCivil,langue);
+            Resource updatedResourcePatient = selectedPatient.getResource();
+            updatedResourcePatient.setActive(actif);
+            updatedResourcePatient.getName().get(0).setFamily(nom);
+            updatedResourcePatient.getName().get(0).setGiven(new String[]{prenom});
+            updatedResourcePatient.setGender(sexe);
+            updatedResourcePatient.setBirthDate(dateNaissance);
+            updatedResourcePatient.getTelecom().get(0).setValue(telephone);
+            updatedResourcePatient.getAddress().get(0).setCity(ville);
+            updatedResourcePatient.getMaritalStatus().setText(etatCivil);
+            updatedResourcePatient.getCommunication().get(0).getLanguage().setText(langue);
 
-            Call<Patient> call = patientService.updatePatient(selectedPatient.getId(), patient);
+            Call<Patient> call = patientService.updatePatient(selectedPatient.getResource().getId(), updatedResourcePatient);
             call.enqueue(new Callback<Patient>() {
                 @Override
                 public void onResponse(Call<Patient> call, Response<Patient> response) {
                     if(response.isSuccessful()){
-                        Toast.makeText(UpdatePatientActivity.this, "Patient updated successfully!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(UpdatePatientActivity.this, "Patient mis à jour avec succès !", Toast.LENGTH_SHORT).show();
                     }
                 }
 
@@ -167,13 +173,13 @@ public class UpdatePatientActivity extends AppCompatActivity {
         String sexe;
         switch (id) {
             case R.id.radioButtonH:
-                sexe = "Homme";
+                sexe = "male";
                 break;
             case R.id.radioButtonF:
-                sexe = "Femme";
+                sexe = "female";
                 break;
             default:
-                sexe = "Autre";
+                sexe = "other";
                 break;
         }
         return sexe;
@@ -181,10 +187,10 @@ public class UpdatePatientActivity extends AppCompatActivity {
 
     public void setPatientGender(String gender){
         switch (gender) {
-            case "Homme":
+            case "male":
                 radioGroupSexe.check(R.id.radioButtonH);
                 break;
-            case "Femme":
+            case "female":
                 radioGroupSexe.check(R.id.radioButtonF);
                 break;
             default:

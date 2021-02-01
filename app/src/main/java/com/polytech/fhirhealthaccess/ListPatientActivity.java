@@ -15,17 +15,16 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.Toast;
 
+import com.google.gson.GsonBuilder;
+import com.polytech.fhirhealthaccess.model.ListPatient;
 import com.polytech.fhirhealthaccess.model.Patient;
 import com.polytech.fhirhealthaccess.remote.APIUtils;
 import com.polytech.fhirhealthaccess.remote.PatientService;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,7 +33,6 @@ import retrofit2.Response;
 public class ListPatientActivity extends AppCompatActivity {
 
     private ListView listView;
-    private SearchView searchView;
     private PatientAdapter adapter;
     public static Patient selectedPatient;
     private PatientService patientService;
@@ -46,11 +44,12 @@ public class ListPatientActivity extends AppCompatActivity {
         setContentView(R.layout.activity_list_patient);
 
         listView = findViewById(R.id.listViewPatient);
-        searchView = findViewById(R.id.searchBar);
+        SearchView searchView = findViewById(R.id.searchBar);
         listView.setTextFilterEnabled(true);
         searchView.setIconifiedByDefault(false);
         patientService = APIUtils.getPatientService();
 
+        Toast.makeText(ListPatientActivity.this, "Mise à jour de la liste des patients...",Toast.LENGTH_LONG).show();
         getPatientsList();
 
         // Rend les éléments de la liste cliquable
@@ -124,28 +123,32 @@ public class ListPatientActivity extends AppCompatActivity {
     }
 
     public void getPatientsList() {
-        Call<List<Patient>> call = patientService.getPatients();
-        call.enqueue(new Callback<List<Patient>>() {
+        Call<ListPatient> call = patientService.getPatients();
+        call.enqueue(new Callback<ListPatient>() {
             @Override
-            public void onResponse(Call<List<Patient>> call, Response<List<Patient>> response) {
+            public void onResponse(Call<ListPatient> call, Response<ListPatient> response) {
                 if(response.isSuccessful()){
-                    list = response.body();
+                    Log.d("debug1",new GsonBuilder().setPrettyPrinting().create().toJson(response));
+                    ListPatient lp = response.body();
+                    Log.d("debug2", String.valueOf(lp.getListPatient().size()));
+                    list = lp.getListPatient();
+
+                    adapter = new PatientAdapter(ListPatientActivity.this, list);
+                    listView.setAdapter(adapter);
+
+                    Toast.makeText(ListPatientActivity.this, "La liste des patients est à jour !",Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<List<Patient>> call, Throwable t) {
+            public void onFailure(Call<ListPatient> call, Throwable t) {
                 Log.e("ERROR: ", t.getMessage());
             }
         });
-
-        adapter = new PatientAdapter(ListPatientActivity.this, list);
-        listView.setAdapter(adapter);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+    public void refresh(View view){
+        Toast.makeText(ListPatientActivity.this, "Mise à jour de la liste des patients...",Toast.LENGTH_LONG).show();
         getPatientsList();
     }
 }

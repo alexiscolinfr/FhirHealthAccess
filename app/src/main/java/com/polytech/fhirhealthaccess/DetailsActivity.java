@@ -23,8 +23,6 @@ import retrofit2.Response;
 public class DetailsActivity extends AppCompatActivity {
 
     private Patient selectedPatient;
-    private TextView textViewNom, textViewPrenom, textViewSexe, textViewDateNaissance, textViewTelephone, textViewAdresse, textViewEtatCivil, textViewLangue;
-    private ImageView imageViewStatus;
     private PatientService patientService;
 
     @Override
@@ -36,25 +34,25 @@ public class DetailsActivity extends AppCompatActivity {
 
         selectedPatient = ListPatientActivity.selectedPatient;
 
-        textViewNom = findViewById(R.id.textViewNomPatient);
-        textViewPrenom = findViewById(R.id.textViewPrenomPatient);
-        textViewSexe = findViewById(R.id.textViewSexePatient);
-        textViewDateNaissance = findViewById(R.id.textViewDateNaissancePatient);
-        textViewTelephone = findViewById(R.id.textViewTelephonePatient);
-        textViewAdresse = findViewById(R.id.textViewAdressePatient);
-        textViewEtatCivil = findViewById(R.id.textViewEtatCivilPatient);
-        textViewLangue = findViewById(R.id.textViewLanguePatient);
-        imageViewStatus = findViewById(R.id.imageViewStatus);
+        TextView textViewNom = findViewById(R.id.textViewNomPatient);
+        TextView textViewPrenom = findViewById(R.id.textViewPrenomPatient);
+        TextView textViewSexe = findViewById(R.id.textViewSexePatient);
+        TextView textViewDateNaissance = findViewById(R.id.textViewDateNaissancePatient);
+        TextView textViewTelephone = findViewById(R.id.textViewTelephonePatient);
+        TextView textViewCity = findViewById(R.id.textViewCityPatient);
+        TextView textViewEtatCivil = findViewById(R.id.textViewEtatCivilPatient);
+        TextView textViewLangue = findViewById(R.id.textViewLanguePatient);
+        ImageView imageViewStatus = findViewById(R.id.imageViewStatus);
 
-        textViewNom.setText(selectedPatient.getNom());
-        textViewPrenom.setText(selectedPatient.getPrenom());
-        textViewSexe.setText(selectedPatient.getSexe());
-        textViewDateNaissance.setText(selectedPatient.getDateNaissance());
-        textViewTelephone.setText(selectedPatient.getTelephone());
-        textViewAdresse.setText(selectedPatient.getAdresse());
-        textViewEtatCivil.setText(selectedPatient.getEtatCivil());
-        textViewLangue.setText(selectedPatient.getLangue());
-        imageViewStatus.setImageResource(getImageId(this,selectedPatient.isActif()));
+        textViewNom.setText(selectedPatient.getResource().getName().get(0).getFamily());
+        textViewPrenom.setText(selectedPatient.getResource().getName().get(0).getGiven()[0]);
+        textViewSexe.setText(selectedPatient.getResource().getGender());
+        textViewDateNaissance.setText(selectedPatient.getResource().getBirthDate());
+        textViewTelephone.setText(selectedPatient.getResource().getTelecom().get(0).getValue());
+        textViewCity.setText(selectedPatient.getResource().getAddress().get(0).getCity());
+        textViewEtatCivil.setText(selectedPatient.getResource().getMaritalStatus().getText());
+        textViewLangue.setText(selectedPatient.getResource().getCommunication().get(0).getLanguage().getText());
+        imageViewStatus.setImageResource(getImageId(this,selectedPatient.getResource().getActive()));
     }
 
     @Override
@@ -72,7 +70,7 @@ public class DetailsActivity extends AppCompatActivity {
                 startActivity(intent);
                 return true;
             case R.id.delete:
-                deletePatient(selectedPatient.getId());
+                deletePatient(selectedPatient.getResource().getId());
                 finish();
                 return true;
             default:
@@ -86,7 +84,7 @@ public class DetailsActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Patient> call, Response<Patient> response) {
                 if(response.isSuccessful()){
-                    Toast.makeText(DetailsActivity.this, "Patient deleted successfully!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(DetailsActivity.this, "Patient supprimé avec succès !", Toast.LENGTH_SHORT).show();
                 }
             }
 

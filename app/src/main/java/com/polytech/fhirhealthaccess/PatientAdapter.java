@@ -46,10 +46,10 @@ public class PatientAdapter extends ArrayAdapter<Patient> implements Filterable 
         Patient patient = getItem(position);
 
         assert patient != null;
-        viewHolder.detailNom.setText(patient.getNom());
-        viewHolder.detailPrenom.setText(patient.getPrenom());
-        viewHolder.detailDateNaissance.setText("Date de naissance : " + patient.getDateNaissance());
-        viewHolder.detailSexe.setText("Sexe : " + patient.getSexe());
+        viewHolder.detailNom.setText(patient.getResource().getName().get(0).getFamily());
+        viewHolder.detailPrenom.setText(patient.getResource().getName().get(0).getGiven()[0]);
+        viewHolder.detailDateNaissance.setText("Date de naissance : " + patient.getResource().getBirthDate());
+        viewHolder.detailSexe.setText("Sexe : " + patient.getResource().getGender());
 
         return convertView;
     }
@@ -84,7 +84,7 @@ public class PatientAdapter extends ArrayAdapter<Patient> implements Filterable 
                 if (filterString.length() != 0 && list!=null) {
                     if (list.size() > 0) {
                         for (final Patient p : list) {
-                            if (p.getNom().toLowerCase().contains(filterString) || p.getPrenom().toLowerCase().contains(filterString))
+                            if (p.getResource().getName().get(0).getFamily().toLowerCase().contains(filterString) || p.getResource().getName().get(0).getGiven()[0].toLowerCase().contains(filterString))
                                 results.add(p);
                         }
                     }
