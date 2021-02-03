@@ -9,6 +9,10 @@ public class Identifier {
     @Expose
     private String use;
 
+    @SerializedName("type")
+    @Expose
+    private Type type;
+
     @SerializedName("system")
     @Expose
     private String system;
@@ -16,6 +20,10 @@ public class Identifier {
     @SerializedName("value")
     @Expose
     private String value;
+
+    @SerializedName("period")
+    @Expose
+    private Period period;
 
     public Identifier(){}
 

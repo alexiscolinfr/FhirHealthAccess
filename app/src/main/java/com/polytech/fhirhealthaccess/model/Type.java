@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class MaritalStatus {
+public class Type {
 
     @SerializedName("coding")
     @Expose
@@ -15,13 +15,5 @@ public class MaritalStatus {
     @Expose
     private String text;
 
-    public MaritalStatus(){}
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
+    public Type(){}
 }

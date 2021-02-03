@@ -15,7 +15,7 @@ import retrofit2.http.Path;
 
 public interface PatientService {
 
-    @GET("Patient/")
+    @GET("Patient/?_lastUpdated=gt2021-02-01")
     @Headers({"Accept: application/fhir+json","Content-Type: application/fhir+json"})
     Call<ListPatient> getPatients();
 

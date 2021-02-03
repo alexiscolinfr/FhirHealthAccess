@@ -5,6 +5,14 @@ import com.google.gson.annotations.SerializedName;
 
 public class Name {
 
+    @SerializedName("use")
+    @Expose
+    private String use;
+
+    @SerializedName("text")
+    @Expose
+    private String text;
+
     @SerializedName("family")
     @Expose
     private String family;
@@ -12,6 +20,18 @@ public class Name {
     @SerializedName("given")
     @Expose
     private String[] given;
+
+    @SerializedName("prefix")
+    @Expose
+    private String[] prefix;
+
+    @SerializedName("suffix")
+    @Expose
+    private String[] suffix;
+
+    @SerializedName("period")
+    @Expose
+    private Period period;
 
     public Name(){}
 

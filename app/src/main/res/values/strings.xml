@@ -17,7 +17,7 @@
     <string name="male">Homme</string>
     <string name="female">Femme</string>
     <string name="other">Autre</string>
-    <string name="default_date">01/01/1970</string>
+    <string name="default_date">1970-25-12</string>
     <string name="add">Ajouter</string>
     <string name="edit">Modifier</string>
     <string name="delete">Supprimer</string>

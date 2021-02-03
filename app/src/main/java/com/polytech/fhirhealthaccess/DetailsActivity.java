@@ -44,14 +44,20 @@ public class DetailsActivity extends AppCompatActivity {
         TextView textViewLangue = findViewById(R.id.textViewLanguePatient);
         ImageView imageViewStatus = findViewById(R.id.imageViewStatus);
 
-        textViewNom.setText(selectedPatient.getResource().getName().get(0).getFamily());
-        textViewPrenom.setText(selectedPatient.getResource().getName().get(0).getGiven()[0]);
+        if (selectedPatient.getResource().getName() != null){
+            textViewNom.setText(selectedPatient.getResource().getName().get(0).getFamily());
+            textViewPrenom.setText(selectedPatient.getResource().getName().get(0).getGiven()[0]);
+        }
         textViewSexe.setText(selectedPatient.getResource().getGender());
         textViewDateNaissance.setText(selectedPatient.getResource().getBirthDate());
-        textViewTelephone.setText(selectedPatient.getResource().getTelecom().get(0).getValue());
-        textViewCity.setText(selectedPatient.getResource().getAddress().get(0).getCity());
-        textViewEtatCivil.setText(selectedPatient.getResource().getMaritalStatus().getText());
-        textViewLangue.setText(selectedPatient.getResource().getCommunication().get(0).getLanguage().getText());
+        if(selectedPatient.getResource().getTelecom() != null)
+            textViewTelephone.setText(selectedPatient.getResource().getTelecom().get(0).getValue());
+        if(selectedPatient.getResource().getAddress() != null)
+            textViewCity.setText(selectedPatient.getResource().getAddress().get(0).getCity());
+        if(selectedPatient.getResource().getMaritalStatus() != null)
+            textViewEtatCivil.setText(selectedPatient.getResource().getMaritalStatus().getText());
+        if(selectedPatient.getResource().getCommunication() != null)
+            textViewLangue.setText(selectedPatient.getResource().getCommunication().get(0).getLanguage().getText());
         imageViewStatus.setImageResource(getImageId(this,selectedPatient.getResource().getActive()));
     }
 
@@ -85,6 +91,8 @@ public class DetailsActivity extends AppCompatActivity {
             public void onResponse(Call<Patient> call, Response<Patient> response) {
                 if(response.isSuccessful()){
                     Toast.makeText(DetailsActivity.this, "Patient supprimé avec succès !", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(DetailsActivity.this, "Une erreur s'est produite, le patient n'a pas pu être supprimé.",Toast.LENGTH_SHORT);
                 }
             }
 

@@ -9,6 +9,10 @@ public class Communication {
     @Expose
     private Language language;
 
+    @SerializedName("preferred")
+    @Expose
+    private boolean preferred;
+
     public Communication(){}
 
     public Language getLanguage() {

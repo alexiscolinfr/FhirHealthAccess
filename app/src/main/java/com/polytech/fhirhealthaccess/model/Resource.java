@@ -3,6 +3,7 @@ package com.polytech.fhirhealthaccess.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Resource {
@@ -39,6 +40,10 @@ public class Resource {
     @Expose
     private String birthDate;
 
+    @SerializedName("deceasedBoolean")
+    @Expose
+    private boolean deceasedBoolean;
+
     @SerializedName("address")
     @Expose
     private List<Address> address;
@@ -46,6 +51,18 @@ public class Resource {
     @SerializedName("maritalStatus")
     @Expose
     private MaritalStatus maritalStatus;
+
+    @SerializedName("multipleBirthBoolean")
+    @Expose
+    private boolean multipleBirthBoolean;
+
+    @SerializedName("photo")
+    @Expose
+    private List<Photo> photo;
+
+    @SerializedName("contact")
+    @Expose
+    private List<Contact> contact;
 
     @SerializedName("communication")
     @Expose

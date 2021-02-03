@@ -128,9 +128,9 @@ public class ListPatientActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<ListPatient> call, Response<ListPatient> response) {
                 if(response.isSuccessful()){
-                    Log.d("debug1",new GsonBuilder().setPrettyPrinting().create().toJson(response));
+                    //Log.d("debug1",new GsonBuilder().setPrettyPrinting().create().toJson(response));
                     ListPatient lp = response.body();
-                    Log.d("debug2", String.valueOf(lp.getListPatient().size()));
+                    //Log.d("debug2", String.valueOf(lp.getListPatient().size()));
                     list = lp.getListPatient();
 
                     adapter = new PatientAdapter(ListPatientActivity.this, list);
@@ -148,7 +148,7 @@ public class ListPatientActivity extends AppCompatActivity {
     }
 
     public void refresh(View view){
-        Toast.makeText(ListPatientActivity.this, "Mise à jour de la liste des patients...",Toast.LENGTH_LONG).show();
+        Toast.makeText(ListPatientActivity.this, "Mise à jour de la liste des patients...",Toast.LENGTH_SHORT).show();
         getPatientsList();
     }
 }
