@@ -2,6 +2,10 @@ package com.polytech.fhirhealthaccess;
 
 import org.mindrot.jbcrypt.BCrypt;
 
+/**
+ * Classe importé depuis github.
+ * Elle permet d'hasher un mot de passe et de vérifier un mot de passe à partir du mot de passe hashé.
+ */
 public class Password {
     // Define the BCrypt workload to use when generating password hashes. 10-31 is a valid value.
     private static int workload = 12;

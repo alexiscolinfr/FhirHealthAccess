@@ -12,12 +12,17 @@ import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface PatientService {
 
-    @GET("Patient/?_lastUpdated=gt2021-02-01")
+    @GET("Patient/")
     @Headers({"Accept: application/fhir+json","Content-Type: application/fhir+json"})
     Call<ListPatient> getPatients();
+
+    @GET("Patient/")
+    @Headers({"Accept: application/fhir+json","Content-Type: application/fhir+json"})
+    Call<ListPatient> getPatientsFromName(@Query("name") String name);
 
     @POST("Patient/")
     @Headers({"Accept: application/fhir+json","Content-Type: application/fhir+json"})

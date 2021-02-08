@@ -25,11 +25,18 @@ import com.polytech.fhirhealthaccess.remote.PatientService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/**
+ * ListPatientActivity est une interface qui liste tous les patients récupérés depuis le serveur Fhir.
+ * Pour chaque patient de la liste, son nom, prénom, sexe et date de naissance sont affichés.
+ *
+ * @version 1.0
+ */
 public class ListPatientActivity extends AppCompatActivity {
 
     private ListView listView;
@@ -43,12 +50,16 @@ public class ListPatientActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_patient);
 
-        listView = findViewById(R.id.listViewPatient);
-        SearchView searchView = findViewById(R.id.searchBar);
-        listView.setTextFilterEnabled(true);
-        searchView.setIconifiedByDefault(false);
         patientService = APIUtils.getPatientService();
 
+        listView = findViewById(R.id.listViewPatient);
+        listView.setTextFilterEnabled(true);
+
+        SearchView searchView = findViewById(R.id.searchBar);
+        searchView.setIconifiedByDefault(false);
+        searchView.setFocusable(false);
+
+        // Au lancement de l'activité, la méthode getPatientsList() est appellée pour remplir la liste de patients
         Toast.makeText(ListPatientActivity.this, "Mise à jour de la liste des patients...",Toast.LENGTH_LONG).show();
         getPatientsList();
 
@@ -62,12 +73,14 @@ public class ListPatientActivity extends AppCompatActivity {
             }
         });
 
-        // Lorsque du texte est inséré dans la barre de recherche, la liste est automatiquement filtée
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            // Lorsque l'utilisateur clique sur le bouton de recherche du clavier, une requête est envoyée au serveur Fhir
             @Override
             public boolean onQueryTextSubmit(String query) {
+                getPatientsListFromName(query);
                 return false;
             }
+            // Lorsque du texte est inséré dans la barre de recherche, la liste est automatiquement filtée
             @Override
             public boolean onQueryTextChange(String newText) {
                 adapter.getFilter().filter(newText);
@@ -103,8 +116,13 @@ public class ListPatientActivity extends AppCompatActivity {
         }
     }
 
-    public void createAlertDialog(Context mContext){
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+    /**
+     * Cette méthode permet d'ouvrir une fenêtre qui affiche des détails à propos de l'applications.
+     *
+     * @param c Contexte de l'activité
+     */
+    public void createAlertDialog(Context c){
+        AlertDialog.Builder builder = new AlertDialog.Builder(c);
         builder.setCancelable(true);
         builder.setTitle("À propos");
         String message = "Cette application a été réalisée dans le cadre du cours " +
@@ -117,36 +135,75 @@ public class ListPatientActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                     }
                 });
-
         AlertDialog dialog = builder.create();
         dialog.show();
     }
 
+    /**
+     * Cette méthode récupère tous les patients depuis le serveur Fhir au format Json et les
+     * convertis en une liste d'objets Java.
+     */
     public void getPatientsList() {
         Call<ListPatient> call = patientService.getPatients();
         call.enqueue(new Callback<ListPatient>() {
             @Override
             public void onResponse(Call<ListPatient> call, Response<ListPatient> response) {
                 if(response.isSuccessful()){
-                    //Log.d("debug1",new GsonBuilder().setPrettyPrinting().create().toJson(response));
                     ListPatient lp = response.body();
-                    //Log.d("debug2", String.valueOf(lp.getListPatient().size()));
+                    assert lp != null;
                     list = lp.getListPatient();
-
-                    adapter = new PatientAdapter(ListPatientActivity.this, list);
-                    listView.setAdapter(adapter);
-
-                    Toast.makeText(ListPatientActivity.this, "La liste des patients est à jour !",Toast.LENGTH_SHORT).show();
+                    if (list != null) {
+                        adapter = new PatientAdapter(ListPatientActivity.this, list);
+                        listView.setAdapter(adapter);
+                        Toast.makeText(ListPatientActivity.this, "La liste des patients est à jour !",Toast.LENGTH_SHORT).show();
+                    } else{
+                        Toast.makeText(ListPatientActivity.this, "Le serveur Fhir ne contient aucun patient.",Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
-
             @Override
             public void onFailure(Call<ListPatient> call, Throwable t) {
-                Log.e("ERROR: ", t.getMessage());
+                Log.e("ERROR: ", Objects.requireNonNull(t.getMessage()));
             }
         });
     }
 
+    /**
+     * Cette méthode récupère tous les patients qui ont un nom ou un prénom correspondant à celui passé
+     * en paramètre depuis le serveur Fhir au format Json et les convertis en une liste d'objets Java.
+     *
+     * @param name Nom du patient recherché
+     */
+    public void getPatientsListFromName(String name){
+        Call<ListPatient> call = patientService.getPatientsFromName(name);
+        call.enqueue(new Callback<ListPatient>() {
+            @Override
+            public void onResponse(Call<ListPatient> call, Response<ListPatient> response) {
+                if(response.isSuccessful()){
+                    ListPatient lp = response.body();
+                    assert lp != null;
+                    list = lp.getListPatient();
+                    if (list != null) {
+                        adapter = new PatientAdapter(ListPatientActivity.this, list);
+                        listView.setAdapter(adapter);
+                        Toast.makeText(ListPatientActivity.this, "La liste des patients est à jour !",Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(ListPatientActivity.this, "Aucun patient avec ce nom n'a été trouvé.",Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+            @Override
+            public void onFailure(Call<ListPatient> call, Throwable t) {
+                Log.e("ERROR: ", Objects.requireNonNull(t.getMessage()));
+            }
+        });
+    }
+
+    /**
+     * Cette méthode permet d'actualiser la liste des patients.
+     *
+     * @param view Vue de l'interface sur laquelle l'utilisateur a cliqué.
+     */
     public void refresh(View view){
         Toast.makeText(ListPatientActivity.this, "Mise à jour de la liste des patients...",Toast.LENGTH_SHORT).show();
         getPatientsList();

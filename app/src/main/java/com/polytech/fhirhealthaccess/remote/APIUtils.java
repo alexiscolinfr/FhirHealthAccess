@@ -2,10 +2,8 @@ package com.polytech.fhirhealthaccess.remote;
 
 public class APIUtils {
 
-    private APIUtils(){
-    };
+    private APIUtils(){}
 
-    //public static final String API_URL = "http://test.fhir.org/r4/";
     public static final String API_URL = "https://stu3.test.pyrohealth.net/fhir/";
 
     public static PatientService getPatientService(){

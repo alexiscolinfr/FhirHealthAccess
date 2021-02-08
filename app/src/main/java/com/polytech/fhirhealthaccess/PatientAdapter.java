@@ -1,5 +1,6 @@
 package com.polytech.fhirhealthaccess;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,12 @@ import com.polytech.fhirhealthaccess.model.Patient;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Cette classe est un adaptateur de patient, elle permet de créer les éléments qui composent la
+ * liste de patients de ListPatientActivity.
+ *
+ * @version 1.0
+ */
 public class PatientAdapter extends ArrayAdapter<Patient> implements Filterable {
 
     public List<Patient> allPatients,filteredPatients;
@@ -26,6 +33,7 @@ public class PatientAdapter extends ArrayAdapter<Patient> implements Filterable 
         this.allPatients = new ArrayList<>(patients);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public View getView(int position, View convertView, ViewGroup parent){
 
@@ -84,7 +92,9 @@ public class PatientAdapter extends ArrayAdapter<Patient> implements Filterable 
                 if (filterString.length() != 0 && list!=null) {
                     if (list.size() > 0) {
                         for (final Patient p : list) {
-                            if (p.getResource().getName().get(0).getFamily().toLowerCase().contains(filterString) || p.getResource().getName().get(0).getGiven()[0].toLowerCase().contains(filterString))
+                            boolean containFirstName = p.getResource().getName().get(0).getGiven()[0].toLowerCase().contains(filterString);
+                            boolean containLastName = p.getResource().getName().get(0).getFamily().toLowerCase().contains(filterString);
+                            if (containFirstName || containLastName)
                                 results.add(p);
                         }
                     }

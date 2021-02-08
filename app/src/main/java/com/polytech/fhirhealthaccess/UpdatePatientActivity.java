@@ -2,6 +2,7 @@ package com.polytech.fhirhealthaccess;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,19 +26,25 @@ import com.polytech.fhirhealthaccess.model.Telecom;
 import com.polytech.fhirhealthaccess.remote.APIUtils;
 import com.polytech.fhirhealthaccess.remote.PatientService;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/**
+ * UodatePatientActivity est une interface qui est appelée lorsque l'utilisateur souhaite ajouter
+ * un nouveau patient ou modifier la fiche d'un patient déjà existant sur le serveur Fhir.
+ *
+ * @version 1.0
+ */
 public class UpdatePatientActivity extends AppCompatActivity {
 
     private int lastSelectedYear, lastSelectedMonth, lastSelectedDayOfMonth;
-    private Button buttonDateNaissance, buttonUpdatePatient;
+    private Button buttonDateNaissance;
     private ToggleButton toggleButtonStatut;
     private EditText editTextNom, editTextPrenom,editTextTelephone,editTextCity,editTextEtatCivil,editTextLangue;
     private RadioGroup radioGroupSexe;
@@ -55,8 +62,8 @@ public class UpdatePatientActivity extends AppCompatActivity {
 
         patientService = APIUtils.getPatientService();
 
+        Button buttonUpdatePatient = findViewById(R.id.buttonUpdatePatient);
         buttonDateNaissance = findViewById(R.id.buttonDateNaissance);
-        buttonUpdatePatient = findViewById(R.id.buttonUpdatePatient);
         toggleButtonStatut = findViewById(R.id.toggleButtonStatut);
         radioGroupSexe = findViewById(R.id.radioGroupeSexe);
         editTextNom = findViewById(R.id.editTextNom);
@@ -71,14 +78,18 @@ public class UpdatePatientActivity extends AppCompatActivity {
         }
         else{
             buttonUpdatePatient.setText(getString(R.string.edit));
-            toggleButtonStatut.setChecked(selectedPatient.getResource().getActive());
+
+            // On vérifie que chaque attribut de la classe Patient existe avant de le récupérer
+            if (selectedPatient.getResource().getActive() != null)
+                toggleButtonStatut.setChecked(selectedPatient.getResource().getActive());
             if (selectedPatient.getResource().getName() != null){
                 editTextNom.setText(selectedPatient.getResource().getName().get(0).getFamily());
                 editTextPrenom.setText(selectedPatient.getResource().getName().get(0).getGiven()[0]);
             }
-
-            setPatientGender(selectedPatient.getResource().getGender());
-            buttonDateNaissance.setText(selectedPatient.getResource().getBirthDate());
+            if (selectedPatient.getResource().getGender() != null)
+                setPatientGender(selectedPatient.getResource().getGender());
+            if (selectedPatient.getResource().getBirthDate() != null)
+                buttonDateNaissance.setText(selectedPatient.getResource().getBirthDate());
             if(selectedPatient.getResource().getTelecom() != null)
                 editTextTelephone.setText(selectedPatient.getResource().getTelecom().get(0).getValue());
             if(selectedPatient.getResource().getAddress() != null)
@@ -90,16 +101,23 @@ public class UpdatePatientActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Cette méthode s'exécute lorsqu'un utilisateur veut renseigner la date de naissance d'un patient.
+     * Elle ouvre une fenêtre avec un calendrier permettant de saisir facilement une date.
+     *
+     * @param view Vue de l'interface sur laquelle l'utilisateur a cliqué.
+     */
     public void setBirthdate (View view){
 
-        // Get Current Date
+        // Récupération de la date actuelle
         final Calendar c = Calendar.getInstance();
         lastSelectedYear = c.get(Calendar.YEAR);
         lastSelectedMonth = c.get(Calendar.MONTH);
         lastSelectedDayOfMonth = c.get(Calendar.DAY_OF_MONTH);
 
-        // Date Select Listener.
+        // Création du date listener
         DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @SuppressLint({"DefaultLocale", "SetTextI18n"})
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 buttonDateNaissance.setText(year + "-" + String.format("%02d", dayOfMonth) + "-" + String.format("%02d", monthOfYear + 1));
@@ -110,15 +128,23 @@ public class UpdatePatientActivity extends AppCompatActivity {
             }
         };
 
-        // Create DatePickerDialog (Spinner Mode):
+        // Création de la boîte de dialogue
         DatePickerDialog datePickerDialog = new DatePickerDialog(this,
                 dateSetListener, lastSelectedYear, lastSelectedMonth, lastSelectedDayOfMonth);
 
-        // Show
+        // Affichage de la boîte de dialogue
         datePickerDialog.show();
     }
 
-    public void updatePatient (View view) throws ParseException {
+    /**
+     * Cette méthode s'exécute lorsqu'un utilisateur clique sur le bouton "Modifier" ou "Ajouter"
+     * après avoir ajouté des informations dans la fiche d'un patient.
+     * Elle extrait les valeurs renseignées par l'utilisateur (i.e nom, prénom, sexe, …) puis créer
+     * un nouveau patient ou modifie les valeurs du patient séléctionné et l'envoie au serveur Fhir.
+     *
+     * @param view Vue de l'interface sur laquelle l'utilisateur a cliqué.
+     */
+    public void updatePatient (View view) {
         boolean actif = toggleButtonStatut.isChecked();
         String nom = editTextNom.getText().toString().trim();
         String prenom = editTextPrenom.getText().toString().trim();
@@ -130,36 +156,47 @@ public class UpdatePatientActivity extends AppCompatActivity {
         String langue = editTextLangue.getText().toString().trim();
 
         if(isNewPatient){
-            Resource newResourcePatient = new Resource();
-            newResourcePatient.setResourceType("Patient");
-            newResourcePatient.setActive(actif);
+            // Création d'un objet Name contenant le nom et prénom du patient
             Name name = new Name();
             name.setGiven(new String[]{prenom});
             name.setFamily(nom);
             List<Name> nameList = new ArrayList<>();
             nameList.add(name);
-            newResourcePatient.setName(nameList);
-            newResourcePatient.setGender(sexe);
-            newResourcePatient.setBirthDate(dateNaissance);
+
+            // Création d'un objet Telecom contenant le numéro de téléphone du patient
             Telecom telecom = new Telecom();
             telecom.setValue(telephone);
             List<Telecom> telecomList = new ArrayList<>();
             telecomList.add(telecom);
-            newResourcePatient.setTelecom(telecomList);
+
+            // Création d'un objet Address contenant la ville du patient
             Address address = new Address();
             address.setCity(ville);
             List<Address> addressList = new ArrayList<>();
             addressList.add(address);
-            newResourcePatient.setAddress(addressList);
+
+            // Création d'un objet MaritalStatus contenant l'état civil du patient
             MaritalStatus maritalStatus = new MaritalStatus();
             maritalStatus.setText(etatCivil);
-            newResourcePatient.setMaritalStatus(maritalStatus);
+
+            // Création d'un objet Language et Communication contenant la langue du patient
             Language language = new Language();
             language.setText(langue);
             Communication communication = new Communication();
             communication.setLanguage(language);
             List<Communication> communicationList = new ArrayList<>();
             communicationList.add(communication);
+
+            // Création d'un objet Ressource contenant tous les objets créer précédemment
+            Resource newResourcePatient = new Resource();
+            newResourcePatient.setResourceType("Patient");
+            newResourcePatient.setActive(actif);
+            newResourcePatient.setName(nameList);
+            newResourcePatient.setGender(sexe);
+            newResourcePatient.setBirthDate(dateNaissance);
+            newResourcePatient.setTelecom(telecomList);
+            newResourcePatient.setAddress(addressList);
+            newResourcePatient.setMaritalStatus(maritalStatus);
             newResourcePatient.setCommunication(communicationList);
 
             Call<Patient> call = patientService.addPatient(newResourcePatient);
@@ -175,7 +212,7 @@ public class UpdatePatientActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<Patient> call, Throwable t) {
-                    Log.e("ERROR: ", t.getMessage());
+                    Log.e("ERROR: ", Objects.requireNonNull(t.getMessage()));
                 }
             });
 
@@ -183,21 +220,64 @@ public class UpdatePatientActivity extends AppCompatActivity {
         }
         else{
             Resource updatedResourcePatient = selectedPatient.getResource();
+
             updatedResourcePatient.setActive(actif);
+            updatedResourcePatient.setGender(sexe);
+            updatedResourcePatient.setBirthDate(dateNaissance);
+
+            // On vérifie que l'attribut du patient à modifier existe
             if (selectedPatient.getResource().getName() != null){
                 updatedResourcePatient.getName().get(0).setFamily(nom);
                 updatedResourcePatient.getName().get(0).setGiven(new String[]{prenom});
+            } else{
+                // Sinon on créé un nouvel objet puis on l'ajoute au patient
+                Name name = new Name();
+                name.setGiven(new String[]{prenom});
+                name.setFamily(nom);
+                List<Name> nameList = new ArrayList<>();
+                nameList.add(name);
+                updatedResourcePatient.setName(nameList);
             }
-            updatedResourcePatient.setGender(sexe);
-            updatedResourcePatient.setBirthDate(dateNaissance);
-            if(selectedPatient.getResource().getTelecom() != null)
+
+            if(selectedPatient.getResource().getTelecom() != null){
                 updatedResourcePatient.getTelecom().get(0).setValue(telephone);
-            if(selectedPatient.getResource().getAddress() != null)
+            }else{
+                Telecom telecom = new Telecom();
+                telecom.setValue(telephone);
+                List<Telecom> telecomList = new ArrayList<>();
+                telecomList.add(telecom);
+                updatedResourcePatient.setTelecom(telecomList);
+            }
+
+            if(selectedPatient.getResource().getAddress() != null){
                 updatedResourcePatient.getAddress().get(0).setCity(ville);
-            if(selectedPatient.getResource().getMaritalStatus() != null)
+            }else{
+                Address address = new Address();
+                address.setCity(ville);
+                List<Address> addressList = new ArrayList<>();
+                addressList.add(address);
+                updatedResourcePatient.setAddress(addressList);
+            }
+
+            if(selectedPatient.getResource().getMaritalStatus() != null){
                 updatedResourcePatient.getMaritalStatus().setText(etatCivil);
-            if(selectedPatient.getResource().getCommunication() != null)
+            }else{
+                MaritalStatus maritalStatus = new MaritalStatus();
+                maritalStatus.setText(etatCivil);
+                updatedResourcePatient.setMaritalStatus(maritalStatus);
+            }
+
+            if(selectedPatient.getResource().getCommunication() != null){
                 updatedResourcePatient.getCommunication().get(0).getLanguage().setText(langue);
+            }else{
+                Language language = new Language();
+                language.setText(langue);
+                Communication communication = new Communication();
+                communication.setLanguage(language);
+                List<Communication> communicationList = new ArrayList<>();
+                communicationList.add(communication);
+                updatedResourcePatient.setCommunication(communicationList);
+            }
 
             Call<Patient> call = patientService.updatePatient(selectedPatient.getResource().getId(), updatedResourcePatient);
             call.enqueue(new Callback<Patient>() {
@@ -212,7 +292,7 @@ public class UpdatePatientActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<Patient> call, Throwable t) {
-                    Log.e("ERROR: ", t.getMessage());
+                    Log.e("ERROR: ", Objects.requireNonNull(t.getMessage()));
                 }
             });
 
@@ -222,6 +302,13 @@ public class UpdatePatientActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Cette méthode renvoie le sexe du patient au format texte en fonction du bouton séléctionné
+     * dans le formulaire (i.e homme, femme ou autre).
+     *
+     * @param radioGroup Groupe des boutons radio du formulaire
+     * @return String Sexe du patient
+     */
     public String getPatientGender(RadioGroup radioGroup){
         int id = radioGroup.getCheckedRadioButtonId();
         String sexe;
@@ -239,6 +326,11 @@ public class UpdatePatientActivity extends AppCompatActivity {
         return sexe;
     }
 
+    /**
+     * Cette méthode coche le bouton du formulaire correspondant au sexe du patient.
+     *
+     * @param gender Sexe du patient
+     */
     public void setPatientGender(String gender){
         switch (gender) {
             case "male":

@@ -16,10 +16,20 @@ import com.polytech.fhirhealthaccess.model.Patient;
 import com.polytech.fhirhealthaccess.remote.APIUtils;
 import com.polytech.fhirhealthaccess.remote.PatientService;
 
+import java.util.Objects;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/**
+ * DetailsActivity est une interface qui permet de visualiser toutes les infomrations d'un patient
+ * après l'avoir séléctionné dans ListPatientActivity.
+ * C'est aussi via cette interface que l'utilisateur peut choisir de supprimer ou modifier la fiche
+ * du patient.
+ *
+ * @version 1.0
+ */
 public class DetailsActivity extends AppCompatActivity {
 
     private Patient selectedPatient;
@@ -31,7 +41,6 @@ public class DetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_details);
 
         patientService = APIUtils.getPatientService();
-
         selectedPatient = ListPatientActivity.selectedPatient;
 
         TextView textViewNom = findViewById(R.id.textViewNomPatient);
@@ -44,12 +53,15 @@ public class DetailsActivity extends AppCompatActivity {
         TextView textViewLangue = findViewById(R.id.textViewLanguePatient);
         ImageView imageViewStatus = findViewById(R.id.imageViewStatus);
 
+        // On vérifie que chaque attribut de la classe Patient existe avant de le récupérer
         if (selectedPatient.getResource().getName() != null){
             textViewNom.setText(selectedPatient.getResource().getName().get(0).getFamily());
             textViewPrenom.setText(selectedPatient.getResource().getName().get(0).getGiven()[0]);
         }
-        textViewSexe.setText(selectedPatient.getResource().getGender());
-        textViewDateNaissance.setText(selectedPatient.getResource().getBirthDate());
+        if (selectedPatient.getResource().getGender() != null)
+            textViewSexe.setText(selectedPatient.getResource().getGender());
+        if(selectedPatient.getResource().getBirthDate() != null)
+            textViewDateNaissance.setText(selectedPatient.getResource().getBirthDate());
         if(selectedPatient.getResource().getTelecom() != null)
             textViewTelephone.setText(selectedPatient.getResource().getTelecom().get(0).getValue());
         if(selectedPatient.getResource().getAddress() != null)
@@ -58,7 +70,8 @@ public class DetailsActivity extends AppCompatActivity {
             textViewEtatCivil.setText(selectedPatient.getResource().getMaritalStatus().getText());
         if(selectedPatient.getResource().getCommunication() != null)
             textViewLangue.setText(selectedPatient.getResource().getCommunication().get(0).getLanguage().getText());
-        imageViewStatus.setImageResource(getImageId(this,selectedPatient.getResource().getActive()));
+        if(selectedPatient.getResource().getActive() != null)
+            imageViewStatus.setImageResource(getImageId(this,selectedPatient.getResource().getActive()));
     }
 
     @Override
@@ -84,6 +97,12 @@ public class DetailsActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Cette méthode s'exécute lorsqu'un utilisateur clique sur le bouton "Supprimer" du menu.
+     * Une requête est envoyé au serveur Fhir demandant de supprimer le patient sélectionné.
+     *
+     * @param id Identifiant du patient à supprimer.
+     */
     public void deletePatient(String id){
         Call<Patient> call = patientService.deletePatient(id);
         call.enqueue(new Callback<Patient>() {
@@ -92,17 +111,25 @@ public class DetailsActivity extends AppCompatActivity {
                 if(response.isSuccessful()){
                     Toast.makeText(DetailsActivity.this, "Patient supprimé avec succès !", Toast.LENGTH_SHORT).show();
                 }else{
-                    Toast.makeText(DetailsActivity.this, "Une erreur s'est produite, le patient n'a pas pu être supprimé.",Toast.LENGTH_SHORT);
+                    Toast.makeText(DetailsActivity.this, "Une erreur s'est produite, le patient n'a pas pu être supprimé.",Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<Patient> call, Throwable t) {
-                Log.e("ERROR: ", t.getMessage());
+                Log.e("ERROR: ", Objects.requireNonNull(t.getMessage()));
             }
         });
     }
 
+    /**
+     * Cette méthode permet de retourner l'id de l'image correspond au statut du patient afin
+     * de changer l'image de statut de la fiche patient.
+     *
+     * @param c Contexte de l'activité
+     * @param isActif Statut du patient
+     * @return int Identifiant de l'image
+     */
     public static int getImageId(Context c, boolean isActif) {
         String imageName;
         if (isActif)
