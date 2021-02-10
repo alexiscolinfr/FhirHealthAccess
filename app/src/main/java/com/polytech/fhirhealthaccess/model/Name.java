@@ -33,7 +33,7 @@ public class Name {
     @Expose
     private Period period;
 
-    public Name(){}
+    public Name() {}
 
     public String getFamily() {
         return family;

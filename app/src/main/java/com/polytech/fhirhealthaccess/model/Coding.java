@@ -25,5 +25,5 @@ public class Coding {
     @Expose
     private boolean userSelected;
 
-    public Coding(){}
+    public Coding() {}
 }

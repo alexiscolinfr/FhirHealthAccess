@@ -9,7 +9,7 @@ public class Language {
     @Expose
     private String text;
 
-    public Language(){}
+    public Language() {}
 
     public String getText() {
         return text;

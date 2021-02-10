@@ -25,6 +25,6 @@ public class Identifier {
     @Expose
     private Period period;
 
-    public Identifier(){}
+    public Identifier() {}
 
 }

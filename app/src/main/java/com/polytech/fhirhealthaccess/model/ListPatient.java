@@ -11,7 +11,7 @@ public class ListPatient {
     @Expose
     private List<Patient> listPatient;
 
-    public ListPatient(List listPatient){
+    public ListPatient(List listPatient) {
         this.listPatient = listPatient;
     }
 

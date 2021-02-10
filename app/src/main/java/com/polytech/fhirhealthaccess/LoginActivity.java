@@ -14,7 +14,7 @@ import com.polytech.fhirhealthaccess.database.User;
 import java.util.List;
 
 /**
- * Première interface qui s'affiche lorsque l'application est lancée.
+ * Première interface (après l'écran de chargement) qui s'affiche lorsque l'application est lancée.
  * Cette activité permet aux utilisateurs de l'application de s'authentifier.
  *
  * @version 1.0
@@ -35,37 +35,47 @@ public class LoginActivity extends AppCompatActivity {
 
     /**
      * Cette méthode s'exécute lorsqu'un utilisateur clique sur le bouton "Connexion".
-     * Elle extrait les valeurs renseignées par l'utilisateur (i.e adresse mail et mot de passe)
-     * et vérifie que celui-ci existe dans la base de données des utilisateurs de l'application.
+     * Elle extrait les valeurs renseignées par l'utilisateur (i.e. adresse mail et mot de passe)
+     * et vérifie que celles-ci existent dans la base de données des utilisateurs de l'application.
+     *
      * @param view Vue de l'interface sur laquelle l'utilisateur a cliqué.
      */
     public void login(View view){
         String email = editTextEmail.getText().toString();
         String password = editTextPassword.getText().toString();
 
-        /* Afin de faciliter les tests de notre application, nous avons choisis d'utiliser une base
-        de données local pour stocker les login/mots de passe des utilisateurs de l'application.
+        /* Afin de faciliter les tests de notre application, nous avons choisi d'utiliser une base
+        de données locale pour stocker les login et mots de passe des utilisateurs de l'application.
         Celle-ci devra être remplacée par une base de données externe lors de la mise en prod
-        afin d'éviter d'écrire en clair dans le code les identifiants et mots de passe.*/
+        afin d'éviter d'écrire en clair, dans le code, les identifiants et mots de passe.*/
         User.deleteAll(User.class);
         String hashed_password = Password.hashPassword("admin");
         User u1 = new User("admin@fhir.org",hashed_password);
         u1.save();
 
-        // Vérification des champs de connexions renseignés par l'utilisateur
+        // Vérification des champs de connexion renseignés par l'utilisateur
         if (email.isEmpty() || password.isEmpty()){
-            Toast.makeText(this, "Vous devez renseigner votre adresse email et mot de passe",Toast.LENGTH_LONG).show();
+            Toast.makeText(
+                    this,
+                    "Vous devez renseigner votre adresse email et mot de passe",
+                    Toast.LENGTH_LONG).show();
         }
         else{
             List<User> users = User.listAll(User.class);
             for (User user : users){
-                if(user.getEmail().equals(email) && Password.checkPassword(password,user.getPassword())){
-                    Intent intent = new Intent(LoginActivity.this, ListPatientActivity.class);
+                if(user.getEmail().equals(email) &&
+                        Password.checkPassword(password, user.getPassword())) {
+                    Intent intent = new Intent(
+                            LoginActivity.this,
+                            ListPatientActivity.class);
                     startActivity(intent);
                     break;
                 }
                 else{
-                    Toast.makeText(this, "Adresse email et/ou mot de passe incorrect",Toast.LENGTH_LONG).show();
+                    Toast.makeText(
+                            this,
+                            "Adresse email et/ou mot de passe incorrect",
+                            Toast.LENGTH_LONG).show();
                 }
             }
         }

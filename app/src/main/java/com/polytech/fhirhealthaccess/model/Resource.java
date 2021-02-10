@@ -68,8 +68,7 @@ public class Resource {
     @Expose
     private List<Communication> communication;
 
-    public Resource(){
-    }
+    public Resource() {}
 
     public String getResourceType() {
         return resourceType;

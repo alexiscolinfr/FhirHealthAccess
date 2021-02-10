@@ -13,5 +13,5 @@ public class Period {
     @Expose
     private String end;
 
-    public Period(){}
+    public Period() {}
 }

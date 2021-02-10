@@ -3,7 +3,7 @@ package com.polytech.fhirhealthaccess;
 import org.mindrot.jbcrypt.BCrypt;
 
 /**
- * Classe importé depuis github.
+ * Classe importée depuis github.
  * Elle permet d'hasher un mot de passe et de vérifier un mot de passe à partir du mot de passe hashé.
  */
 public class Password {

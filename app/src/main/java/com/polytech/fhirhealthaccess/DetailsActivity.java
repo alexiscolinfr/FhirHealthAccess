@@ -23,10 +23,10 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * DetailsActivity est une interface qui permet de visualiser toutes les infomrations d'un patient
+ * DetailsActivity est une interface qui permet de visualiser toutes les informations d'un patient
  * après l'avoir séléctionné dans ListPatientActivity.
- * C'est aussi via cette interface que l'utilisateur peut choisir de supprimer ou modifier la fiche
- * du patient.
+ * C'est aussi via cette interface que l'utilisateur peut choisir de supprimer ou de modifier la
+ * fiche du patient.
  *
  * @version 1.0
  */
@@ -69,17 +69,29 @@ public class DetailsActivity extends AppCompatActivity {
         if(selectedPatient.getResource().getMaritalStatus() != null)
             textViewEtatCivil.setText(selectedPatient.getResource().getMaritalStatus().getText());
         if(selectedPatient.getResource().getCommunication() != null)
-            textViewLangue.setText(selectedPatient.getResource().getCommunication().get(0).getLanguage().getText());
+            textViewLangue.setText(selectedPatient.getResource().getCommunication().get(0)
+                    .getLanguage().getText());
         if(selectedPatient.getResource().getActive() != null)
-            imageViewStatus.setImageResource(getImageId(this,selectedPatient.getResource().getActive()));
+            imageViewStatus.setImageResource(getImageId(this,selectedPatient.getResource()
+                    .getActive()));
     }
 
+    /**
+     * Cette méthode permet de créer un menu depuis le XML du menu menu_details.
+     *
+     * @param menu Menu à créer.
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_details, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
+    /**
+     * Cette méthode permet de définir les fonctionnalités des différentes options du menu.
+     *
+     * @param item Option du menu choisit par l'utilisateur.
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -99,7 +111,7 @@ public class DetailsActivity extends AppCompatActivity {
 
     /**
      * Cette méthode s'exécute lorsqu'un utilisateur clique sur le bouton "Supprimer" du menu.
-     * Une requête est envoyé au serveur Fhir demandant de supprimer le patient sélectionné.
+     * Une requête est envoyée au serveur Fhir demandant de supprimer le patient sélectionné.
      *
      * @param id Identifiant du patient à supprimer.
      */
@@ -109,9 +121,15 @@ public class DetailsActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Patient> call, Response<Patient> response) {
                 if(response.isSuccessful()){
-                    Toast.makeText(DetailsActivity.this, "Patient supprimé avec succès !", Toast.LENGTH_SHORT).show();
-                }else{
-                    Toast.makeText(DetailsActivity.this, "Une erreur s'est produite, le patient n'a pas pu être supprimé.",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(
+                            DetailsActivity.this,
+                            "Patient supprimé avec succès !",
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(
+                            DetailsActivity.this,
+                            "Une erreur s'est produite, le patient n'a pas pu être supprimé.",
+                            Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -124,7 +142,7 @@ public class DetailsActivity extends AppCompatActivity {
 
     /**
      * Cette méthode permet de retourner l'id de l'image correspond au statut du patient afin
-     * de changer l'image de statut de la fiche patient.
+     * de changer l'image du statut de la fiche patient.
      *
      * @param c Contexte de l'activité
      * @param isActif Statut du patient

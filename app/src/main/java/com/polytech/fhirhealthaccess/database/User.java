@@ -7,7 +7,7 @@ public class User extends SugarRecord {
     String email;
     String password;
 
-    public User(){}
+    public User() {}
 
     public User(String email, String password){
         this.email = email;

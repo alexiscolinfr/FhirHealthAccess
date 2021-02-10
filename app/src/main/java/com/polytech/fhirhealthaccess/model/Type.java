@@ -15,5 +15,5 @@ public class Type {
     @Expose
     private String text;
 
-    public Type(){}
+    public Type() {}
 }

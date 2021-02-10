@@ -25,7 +25,7 @@ public class Telecom {
     @Expose
     private Period period;
 
-    public Telecom(){}
+    public Telecom() {}
 
     public String getValue() {
         return value;

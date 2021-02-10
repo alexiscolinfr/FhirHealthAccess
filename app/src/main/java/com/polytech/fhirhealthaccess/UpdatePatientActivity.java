@@ -36,8 +36,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * UodatePatientActivity est une interface qui est appelée lorsque l'utilisateur souhaite ajouter
- * un nouveau patient ou modifier la fiche d'un patient déjà existant sur le serveur Fhir.
+ * UpdatePatientActivity est une interface appelée lorsque l'utilisateur souhaite ajouter un nouveau
+ * patient ou modifier la fiche d'un patient déjà existant sur le serveur Fhir.
  *
  * @version 1.0
  */
@@ -46,7 +46,8 @@ public class UpdatePatientActivity extends AppCompatActivity {
     private int lastSelectedYear, lastSelectedMonth, lastSelectedDayOfMonth;
     private Button buttonDateNaissance;
     private ToggleButton toggleButtonStatut;
-    private EditText editTextNom, editTextPrenom,editTextTelephone,editTextCity,editTextEtatCivil,editTextLangue;
+    private EditText editTextNom, editTextPrenom, editTextTelephone, editTextCity,
+            editTextEtatCivil, editTextLangue;
     private RadioGroup radioGroupSexe;
     private boolean isNewPatient;
     private Patient selectedPatient = ListPatientActivity.selectedPatient;
@@ -97,7 +98,8 @@ public class UpdatePatientActivity extends AppCompatActivity {
             if(selectedPatient.getResource().getMaritalStatus() != null)
                 editTextEtatCivil.setText(selectedPatient.getResource().getMaritalStatus().getText());
             if(selectedPatient.getResource().getCommunication() != null)
-                editTextLangue.setText(selectedPatient.getResource().getCommunication().get(0).getLanguage().getText());
+                editTextLangue.setText(selectedPatient.getResource().getCommunication().get(0)
+                        .getLanguage().getText());
         }
     }
 
@@ -120,7 +122,8 @@ public class UpdatePatientActivity extends AppCompatActivity {
             @SuppressLint({"DefaultLocale", "SetTextI18n"})
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                buttonDateNaissance.setText(year + "-" + String.format("%02d", dayOfMonth) + "-" + String.format("%02d", monthOfYear + 1));
+                buttonDateNaissance.setText(year + "-" + String.format("%02d", dayOfMonth) + "-"
+                        + String.format("%02d", monthOfYear + 1));
 
                 lastSelectedYear = year;
                 lastSelectedMonth = monthOfYear;
@@ -139,7 +142,7 @@ public class UpdatePatientActivity extends AppCompatActivity {
     /**
      * Cette méthode s'exécute lorsqu'un utilisateur clique sur le bouton "Modifier" ou "Ajouter"
      * après avoir ajouté des informations dans la fiche d'un patient.
-     * Elle extrait les valeurs renseignées par l'utilisateur (i.e nom, prénom, sexe, …) puis créer
+     * Elle extrait les valeurs renseignées par l'utilisateur (i.e. nom, prénom, sexe, …) puis créé
      * un nouveau patient ou modifie les valeurs du patient séléctionné et l'envoie au serveur Fhir.
      *
      * @param view Vue de l'interface sur laquelle l'utilisateur a cliqué.
@@ -155,8 +158,8 @@ public class UpdatePatientActivity extends AppCompatActivity {
         String etatCivil = editTextEtatCivil.getText().toString().trim();
         String langue = editTextLangue.getText().toString().trim();
 
-        if(isNewPatient){
-            // Création d'un objet Name contenant le nom et prénom du patient
+        if(isNewPatient) {
+            // Création d'un objet Name contenant les nom et prénom du patient
             Name name = new Name();
             name.setGiven(new String[]{prenom});
             name.setFamily(nom);
@@ -179,7 +182,7 @@ public class UpdatePatientActivity extends AppCompatActivity {
             MaritalStatus maritalStatus = new MaritalStatus();
             maritalStatus.setText(etatCivil);
 
-            // Création d'un objet Language et Communication contenant la langue du patient
+            // Création d'un objet Language et Communication contenant la langue parlée par le patient
             Language language = new Language();
             language.setText(langue);
             Communication communication = new Communication();
@@ -187,7 +190,7 @@ public class UpdatePatientActivity extends AppCompatActivity {
             List<Communication> communicationList = new ArrayList<>();
             communicationList.add(communication);
 
-            // Création d'un objet Ressource contenant tous les objets créer précédemment
+            // Création d'un objet Ressource contenant tous les objets créés précédemment
             Resource newResourcePatient = new Resource();
             newResourcePatient.setResourceType("Patient");
             newResourcePatient.setActive(actif);
@@ -204,9 +207,15 @@ public class UpdatePatientActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<Patient> call, Response<Patient> response) {
                     if(response.isSuccessful()){
-                        Toast.makeText(UpdatePatientActivity.this, "Patient créé avec succès !", Toast.LENGTH_SHORT).show();
-                    }else{
-                        Toast.makeText(UpdatePatientActivity.this, "Une erreur s'est produite, le patient n'a pas pu être créé.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(
+                                UpdatePatientActivity.this,
+                                "Patient créé avec succès !",
+                                Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(
+                                UpdatePatientActivity.this,
+                                "Une erreur s'est produite, le patient n'a pas pu être créé.",
+                                Toast.LENGTH_SHORT).show();
                     }
                 }
 
@@ -218,18 +227,18 @@ public class UpdatePatientActivity extends AppCompatActivity {
 
             finish();
         }
-        else{
+        else {
             Resource updatedResourcePatient = selectedPatient.getResource();
 
             updatedResourcePatient.setActive(actif);
             updatedResourcePatient.setGender(sexe);
             updatedResourcePatient.setBirthDate(dateNaissance);
 
-            // On vérifie que l'attribut du patient à modifier existe
+            // Pour chaque attribut du patient à modifier, on vérifie qu'il existe
             if (selectedPatient.getResource().getName() != null){
                 updatedResourcePatient.getName().get(0).setFamily(nom);
                 updatedResourcePatient.getName().get(0).setGiven(new String[]{prenom});
-            } else{
+            } else {
                 // Sinon on créé un nouvel objet puis on l'ajoute au patient
                 Name name = new Name();
                 name.setGiven(new String[]{prenom});
@@ -239,9 +248,9 @@ public class UpdatePatientActivity extends AppCompatActivity {
                 updatedResourcePatient.setName(nameList);
             }
 
-            if(selectedPatient.getResource().getTelecom() != null){
+            if(selectedPatient.getResource().getTelecom() != null) {
                 updatedResourcePatient.getTelecom().get(0).setValue(telephone);
-            }else{
+            } else {
                 Telecom telecom = new Telecom();
                 telecom.setValue(telephone);
                 List<Telecom> telecomList = new ArrayList<>();
@@ -249,9 +258,9 @@ public class UpdatePatientActivity extends AppCompatActivity {
                 updatedResourcePatient.setTelecom(telecomList);
             }
 
-            if(selectedPatient.getResource().getAddress() != null){
+            if(selectedPatient.getResource().getAddress() != null) {
                 updatedResourcePatient.getAddress().get(0).setCity(ville);
-            }else{
+            } else {
                 Address address = new Address();
                 address.setCity(ville);
                 List<Address> addressList = new ArrayList<>();
@@ -259,17 +268,17 @@ public class UpdatePatientActivity extends AppCompatActivity {
                 updatedResourcePatient.setAddress(addressList);
             }
 
-            if(selectedPatient.getResource().getMaritalStatus() != null){
+            if(selectedPatient.getResource().getMaritalStatus() != null) {
                 updatedResourcePatient.getMaritalStatus().setText(etatCivil);
-            }else{
+            } else {
                 MaritalStatus maritalStatus = new MaritalStatus();
                 maritalStatus.setText(etatCivil);
                 updatedResourcePatient.setMaritalStatus(maritalStatus);
             }
 
-            if(selectedPatient.getResource().getCommunication() != null){
+            if(selectedPatient.getResource().getCommunication() != null) {
                 updatedResourcePatient.getCommunication().get(0).getLanguage().setText(langue);
-            }else{
+            } else {
                 Language language = new Language();
                 language.setText(langue);
                 Communication communication = new Communication();
@@ -279,14 +288,21 @@ public class UpdatePatientActivity extends AppCompatActivity {
                 updatedResourcePatient.setCommunication(communicationList);
             }
 
-            Call<Patient> call = patientService.updatePatient(selectedPatient.getResource().getId(), updatedResourcePatient);
+            Call<Patient> call = patientService.updatePatient(selectedPatient.getResource().getId(),
+                    updatedResourcePatient);
             call.enqueue(new Callback<Patient>() {
                 @Override
                 public void onResponse(Call<Patient> call, Response<Patient> response) {
                     if(response.isSuccessful()){
-                        Toast.makeText(UpdatePatientActivity.this, "Patient mis à jour avec succès !", Toast.LENGTH_SHORT).show();
-                    }else{
-                        Toast.makeText(UpdatePatientActivity.this, "Une erreur s'est produite, le patient n'a pas pu être mis à jour.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(
+                                UpdatePatientActivity.this,
+                                "Patient mis à jour avec succès !",
+                                Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(
+                                UpdatePatientActivity.this,
+                                "Une erreur s'est produite, le patient n'a pas pu être mis à jour.",
+                                Toast.LENGTH_SHORT).show();
                     }
                 }
 
@@ -304,12 +320,12 @@ public class UpdatePatientActivity extends AppCompatActivity {
 
     /**
      * Cette méthode renvoie le sexe du patient au format texte en fonction du bouton séléctionné
-     * dans le formulaire (i.e homme, femme ou autre).
+     * dans le formulaire (i.e. homme, femme ou autre).
      *
      * @param radioGroup Groupe des boutons radio du formulaire
      * @return String Sexe du patient
      */
-    public String getPatientGender(RadioGroup radioGroup){
+    public String getPatientGender(RadioGroup radioGroup) {
         int id = radioGroup.getCheckedRadioButtonId();
         String sexe;
         switch (id) {
@@ -331,7 +347,7 @@ public class UpdatePatientActivity extends AppCompatActivity {
      *
      * @param gender Sexe du patient
      */
-    public void setPatientGender(String gender){
+    public void setPatientGender(String gender) {
         switch (gender) {
             case "male":
                 radioGroupSexe.check(R.id.radioButtonH);

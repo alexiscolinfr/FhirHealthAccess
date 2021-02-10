@@ -9,8 +9,7 @@ public class Patient {
     @Expose
     private Resource resource;
 
-    public Patient(){
-    }
+    public Patient() {}
 
     public Resource getResource() {
         return resource;

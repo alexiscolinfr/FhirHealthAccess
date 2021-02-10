@@ -37,5 +37,5 @@ public class Photo {
     @Expose
     private String creation;
 
-    public Photo(){}
+    public Photo() {}
 }

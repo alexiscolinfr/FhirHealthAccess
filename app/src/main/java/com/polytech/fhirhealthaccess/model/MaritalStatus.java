@@ -15,7 +15,7 @@ public class MaritalStatus {
     @Expose
     private String text;
 
-    public MaritalStatus(){}
+    public MaritalStatus() {}
 
     public String getText() {
         return text;

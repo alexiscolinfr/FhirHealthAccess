@@ -7,8 +7,16 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    // Thème pour la barre de progression
     <style name="AppTheme.ProgressBar">
         <item name="colorAccent">@color/colorRed</item>
+    </style>
+
+    // Pour supprimer la barre du titre pour l'écran d'accueil
+    // Pour conserver les couleurs du thème par défaut, on ajoute un nouveau thème dans les styles
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
 </resources>
