@@ -49,6 +49,7 @@ public class ListPatientActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_patient);
+        setTitle("Accueil");
 
         patientService = APIUtils.getPatientService();
 
@@ -59,8 +60,8 @@ public class ListPatientActivity extends AppCompatActivity {
         searchView.setIconifiedByDefault(false);
         searchView.setFocusable(false);
 
-        // Au lancement de l'activité, la méthode getPatientsList() est appellée pour remplir la
-        // liste de patients
+        /* Au lancement de l'activité, la méthode getPatientsList() est appellée pour remplir la
+        liste de patients */
         Toast.makeText(
                 ListPatientActivity.this,
                 "Mise à jour de la liste des patients...",
@@ -80,16 +81,16 @@ public class ListPatientActivity extends AppCompatActivity {
         });
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            // Lorsque l'utilisateur clique sur le bouton de recherche du clavier, une requête est
-            // envoyée au serveur Fhir
+            /* Lorsque l'utilisateur clique sur le bouton de recherche du clavier, une requête est
+            envoyée au serveur Fhir */
             @Override
             public boolean onQueryTextSubmit(String query) {
                 getPatientsListFromName(query);
                 return false;
             }
 
-            // Lorsque du texte est inséré dans la barre de recherche, la liste est automatiquement
-            // filtrée
+            /* Lorsque du texte est inséré dans la barre de recherche, la liste est automatiquement
+            filtrée */
             @Override
             public boolean onQueryTextChange(String newText) {
                 adapter.getFilter().filter(newText);

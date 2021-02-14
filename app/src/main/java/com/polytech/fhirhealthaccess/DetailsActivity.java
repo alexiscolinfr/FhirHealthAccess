@@ -39,6 +39,7 @@ public class DetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
+        setTitle("Détails du patient");
 
         patientService = APIUtils.getPatientService();
         selectedPatient = ListPatientActivity.selectedPatient;

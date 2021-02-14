@@ -56,12 +56,13 @@ public class PatientAdapter extends ArrayAdapter<Patient> implements Filterable 
         Patient patient = getItem(position);
 
         assert patient != null;
-        viewHolder.detailNom.setText(patient.getResource().getName().get(0).getFamily());
-        viewHolder.detailPrenom.setText(patient.getResource().getName().get(0).getGiven()[0]);
-        viewHolder.detailDateNaissance.setText("Date de naissance : "
-                + patient.getResource().getBirthDate());
-        viewHolder.detailSexe.setText("Sexe : " + patient.getResource().getGender());
-
+        if(patient.getResource().getName() != null) {
+            viewHolder.detailNom.setText(patient.getResource().getName().get(0).getFamily());
+            viewHolder.detailPrenom.setText(patient.getResource().getName().get(0).getGiven()[0]);
+            viewHolder.detailDateNaissance.setText("Date de naissance : "
+                    + patient.getResource().getBirthDate());
+            viewHolder.detailSexe.setText("Sexe : " + patient.getResource().getGender());
+        }
         return convertView;
     }
 
@@ -95,12 +96,14 @@ public class PatientAdapter extends ArrayAdapter<Patient> implements Filterable 
                 if (filterString.length() != 0 && list!=null) {
                     if (list.size() > 0) {
                         for (final Patient p : list) {
-                            boolean containFirstName = p.getResource().getName().get(0)
-                                    .getGiven()[0].toLowerCase().contains(filterString);
-                            boolean containLastName = p.getResource().getName().get(0).
-                                    getFamily().toLowerCase().contains(filterString);
-                            if (containFirstName || containLastName)
-                                results.add(p);
+                            if(p.getResource().getName() != null){
+                                boolean containFirstName = p.getResource().getName().get(0)
+                                        .getGiven()[0].toLowerCase().contains(filterString);
+                                boolean containLastName = p.getResource().getName().get(0).
+                                        getFamily().toLowerCase().contains(filterString);
+                                if (containFirstName || containLastName)
+                                    results.add(p);
+                            }
                         }
                     }
                     oReturn.values = results;

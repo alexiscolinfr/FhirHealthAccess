@@ -9,7 +9,7 @@ L'objectif de cette application est d'utiliser la ressource patient en vue de sa
 Nous utilisons pour cela l'API du serveur FHIR de test [Pyrohealth](https://stu3.test.pyrohealth.net/fhir/).
 
 ## ⚙ Installation
-Pour installer l'application sur un téléphone Android, veuillez suivre les insctructions suivante :
+Pour installer l'application sur un téléphone Android, veuillez suivre les instructions suivantes :
 1. Allez dans les **paramètres**, puis **Sécurité**
 2. Activez les **sources inconnues**
 3. Recherchez l’APK sur votre téléphone (à l’aide d’un explorateur de fichiers par exemple)
@@ -31,7 +31,7 @@ Sur la page d'accueil de l'application, l'utilisateur peut visualiser la liste d
 Pour effectuer une recherche dans la liste des patients déjà présents sur l'application, il vous suffira d'entrer dans la barre de rechercher le nom ou prénom du patient. Un filtre en temps réel sera effectué sur la liste.
 
 Si cette recherche ne retourne aucun résultat ou que les résultats ne correspondent pas au patient recherché, il vous faudra alors appuyer sur la petite loupe en bas à droite de votre clavier pour lancer une recherche depuis le serveur. 
-Une fois cette recherche lancée, soit le ou les patients correspondant à votre recherche s'afficheront dans la liste, soit un message en bas de votre écran vous indiquera qu'aucun patient correspondant à votre recherche n'a été trouver sur le serveur.
+Une fois cette recherche lancée, soit le ou les patients correspondant à votre recherche s'afficheront dans la liste, soit un message en bas de votre écran vous indiquera qu'aucun patient correspondant à votre recherche n'a été trouvé sur le serveur.
 
 ### Détails d'un patient
 Pour afficher toutes les informations de la fiche d'un patient (nom, prénom, statut, sexe, date de naissance, téléphone, ville, état civil et langue), vous devez sélectionner dans la liste des patients de la page d'accueil le patient qui vous intéresse.

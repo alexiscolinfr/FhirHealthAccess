@@ -75,9 +75,11 @@ public class UpdatePatientActivity extends AppCompatActivity {
         editTextLangue = findViewById(R.id.editTextLangue);
 
         if (isNewPatient){
+            setTitle("Ajout d'un patient");
             buttonUpdatePatient.setText(getString(R.string.add));
         }
         else{
+            setTitle("Modification du patient");
             buttonUpdatePatient.setText(getString(R.string.edit));
 
             // On vérifie que chaque attribut de la classe Patient existe avant de le récupérer

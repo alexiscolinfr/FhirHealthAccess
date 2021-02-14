@@ -12,10 +12,18 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="30sp"
+        android:layout_marginBottom="80dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_marginBottom="20sp"
+            app:srcCompat="@drawable/logo" />
 
         <EditText
             android:id="@+id/editTextEmailAddress"

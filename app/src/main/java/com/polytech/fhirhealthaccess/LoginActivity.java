@@ -28,6 +28,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         SugarContext.init(this);
+        setTitle("Connexion - Fhir Health Access");
 
         editTextEmail = findViewById(R.id.editTextEmailAddress);
         editTextPassword = findViewById(R.id.editTextPassword);
@@ -49,6 +50,7 @@ public class LoginActivity extends AppCompatActivity {
         Celle-ci devra être remplacée par une base de données externe lors de la mise en prod
         afin d'éviter d'écrire en clair, dans le code, les identifiants et mots de passe.*/
         User.deleteAll(User.class);
+        // Le mot de passe est hashé avant d'être inséré dans la base de données
         String hashed_password = Password.hashPassword("admin");
         User u1 = new User("admin@fhir.org",hashed_password);
         u1.save();
